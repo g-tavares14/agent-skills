@@ -1,0 +1,16 @@
+{
+  "name": "gtavares-skills",
+  "description": "Default engineering skills pack for TypeScript and Python.",
+  "owner": {
+    "name": "gtavares"
+  },
+  "plugins": [
+    {
+      "name": "agent-skills",
+      "description": "Engineering skills covering spec, plan, build, verify, review, and ship — examples in TypeScript and Python.",
+      "category": "development",
+      "source": { "type": "local", "path": "." },
+      "keywords": ["skills", "typescript", "python", "tdd", "spec", "review"]
+    }
+  ]
+}

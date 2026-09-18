@@ -1,0 +1,4 @@
+# Project-scoped Grok Build config. Only [plugins], [mcp_servers], [permission]
+# (and [mcp] max_output_bytes) are read from this file.
+[plugins]
+enabled = ["agent-skills"]

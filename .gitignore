@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+.venv/
+venv/
+__pycache__/
+.env
+.env.*
+*.log
+.grok/.simplify-ignore-cache/
+evals/results/

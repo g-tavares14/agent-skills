@@ -1,0 +1,21 @@
+{
+  "name": "agent-skills",
+  "version": "0.1.0",
+  "description": "Engineering skills, agents, and lifecycle commands for TypeScript and Python.",
+  "author": {
+    "name": "gtavares"
+  },
+  "license": "MIT",
+  "commands": "./commands",
+  "hooks": "./hooks/hooks.json",
+  "keywords": [
+    "skills",
+    "agents",
+    "typescript",
+    "python",
+    "spec",
+    "tdd",
+    "review",
+    "ship"
+  ]
+}
