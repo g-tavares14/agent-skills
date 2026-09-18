@@ -1,6 +1,6 @@
-# Agent Skills (Grok Build, Zed, Zed Delta)
+# Agent Skills (Grok Build)
 
-Engineering skills, specialist agents, and lifecycle slash commands — packaged for **Grok Build**, **Zed Agent**, and **Zed Delta**. Examples are **TypeScript and Python only**.
+Engineering skills, specialist agents, lifecycle slash commands, and the `/agent-skills:code-simplify` hook — packaged for **Grok Build**. Examples are **TypeScript and Python only**.
 
 Derived from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT).
 
@@ -9,94 +9,48 @@ Derived from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skill
   /agent-skills:spec     /agent-skills:plan    /agent-skills:build   /agent-skills:test    /agent-skills:review   /agent-skills:ship
 ```
 
-Always invoke this pack as `/agent-skills:<command>` (Grok, Zed, and Delta). That is the plugin namespace on Grok, so it never steals Grok's `/plan` or `/review`.
-
-Zed and Delta cannot register `:` in a skill name. If you type `/agent-skills:spec` in the composer, the agent still runs this pack. The slash picker aliases are `/spec`, `/plan`, `/build`, `/test`, `/constraints`, `/code-review`, `/code-simplify`, `/webperf`, `/ship`. Delta's `/review` is a built-in product command — this pack's review is `/agent-skills:review` (picker `/code-review`).
+Always invoke this pack as `/agent-skills:<command>`. That is the plugin namespace, so it never steals Grok's `/plan` or `/review`. Grok may still list an uncontested short alias (`/spec`, `/build`, …) in the menu — use the prefixed form anyway.
 
 ## Install
 
-### Grok Build
+From this repo:
 
 ```bash
 ./scripts/install-grok.sh
 ```
 
-Validates the plugin, installs it with `--trust`, enables `agent-skills`, and merges `plugins.paths` / `plugins.enabled` into `~/.grok/config.toml`. Re-run after you pull changes.
+That validates the plugin, installs it with `--trust`, enables `agent-skills`, and merges `plugins.paths` / `plugins.enabled` into `~/.grok/config.toml` so the pack is the default on every project. Re-run after you pull changes.
 
 This repo needs folder trust for `AGENTS.md` and project discovery: `grok --trust` or `/hooks-trust`. Confirm with `grok inspect`.
 
-### Zed and Zed Delta
-
-Both load the same Agent Skills roots — there is no separate Delta layout in this pack:
-
-| Scope | Path |
-|-------|------|
-| Project | `.agents/skills/` in this repo (flat; Zed does not nest) |
-| Global | `~/.agents/skills/` (symlink farm from this repo) |
-
-```bash
-./scripts/install-zed.sh
-```
-
-That is the Zed/Delta analog of `install-grok.sh`:
-
-| Grok Build | Zed / Zed Delta |
-|------------|-----------------|
-| Enable plugin in `~/.grok/config.toml` | Skills in `~/.agents/skills/` (every project) |
-| Plugin skills always in the catalog | Personal `AGENTS.md` always in the system prompt |
-
-The installer also hides those skill copies from Grok (`[skills].ignore`) so the Grok plugin stays the source of truth. It merges a managed block into personal `AGENTS.md` (does not replace the rest of the file):
-
-- Zed: next to `settings.json` (`~/.config/zed/AGENTS.md` on this machine)
-- Delta: `~/.config/delta/AGENTS.md`, and next to Delta's `settings.json` when that lives elsewhere
-
-Re-run after you pull. Uninstall with `./scripts/install-zed.sh --uninstall` (removes our symlinks and the managed `AGENTS.md` block only). Start a **new** agent thread after install so the instructions load.
-
-Delta-only `.delta/skills/` is unused on purpose — one tree serves both products.
-
-The `simplify-ignore` hook is **Grok-only**. Zed and Delta have no equivalent in this pack.
-
 ## Commands
 
-| Command | Picker alias (Zed / Delta) | Skill / persona |
-|---------|----------------------------|-----------------|
-| `/agent-skills:spec` | `/spec` | `spec-driven-development` |
-| `/agent-skills:plan` | `/plan` | `planning-and-task-breakdown` |
-| `/agent-skills:build` | `/build` | `incremental-implementation` + `test-driven-development` |
-| `/agent-skills:build auto` | `/build auto` | same |
-| `/agent-skills:test` | `/test` | `test-driven-development` |
-| `/agent-skills:constraints` | `/constraints` | `constraint-driven-development` |
-| `/agent-skills:review` | `/code-review` | `code-review-and-quality` |
-| `/agent-skills:code-simplify` | `/code-simplify` | `code-simplification` |
-| `/agent-skills:webperf` | `/webperf` | `web-performance-auditor` |
-| `/agent-skills:ship` | `/ship` | `shipping-and-launch` + parallel personas |
-
-Lifecycle wrappers in `.agents/skills/` set `disable-model-invocation: true` so they only run when you type the slash command. The 25 workflow skills stay auto-invocable.
+| Command | Skill / persona |
+|---------|-----------------|
+| `/agent-skills:spec` | `spec-driven-development` |
+| `/agent-skills:plan` | `planning-and-task-breakdown` |
+| `/agent-skills:build` | `incremental-implementation` + `test-driven-development` |
+| `/agent-skills:build auto` | whole plan, one approval |
+| `/agent-skills:test` | `test-driven-development` |
+| `/agent-skills:constraints` | `constraint-driven-development` |
+| `/agent-skills:review` | `code-review-and-quality` |
+| `/agent-skills:code-simplify` | `code-simplification` + `simplify-ignore` hook |
+| `/agent-skills:webperf` | `web-performance-auditor` |
+| `/agent-skills:ship` | `shipping-and-launch` + parallel `code-reviewer`, `security-auditor`, `test-engineer` |
 
 ## Layout
 
 | Path | Role |
 |------|------|
-| `skills/` | 25 workflows (canonical) |
-| `agents/` | 4 personas (Grok agent types; Zed/Delta read the files when spawning) |
+| `skills/` | 25 workflows |
+| `agents/` | 4 personas |
 | `commands/*.md` | Grok slash commands |
-| `.agents/skills/` | Zed / Delta: symlinks to `skills/` plus lifecycle wrappers |
-| `hooks/hooks.json` | Grok plugin hook (`simplify-ignore`) |
+| `hooks/hooks.json` | Plugin hook (`simplify-ignore`) |
 | `references/` | Shared checklists |
 | `plugin.json` | Grok plugin manifest |
 | `.grok-plugin/marketplace.json` | Marketplace index |
-| `.grok/{skills,agents}` | Symlinks for Grok discovery when this repo is cwd |
+| `.grok/{skills,agents}` | Symlinks for discovery when this repo is cwd |
 | `scripts/install-grok.sh` | Apply this pack as the Grok Build default |
-| `scripts/install-zed.sh` | Apply this pack as the Zed / Delta default (global skills + personal `AGENTS.md`) |
-
-## Harness notes
-
-| | Grok Build | Zed Agent | Zed Delta |
-|--|------------|-----------|-----------|
-| Skills | Plugin `skills/` + `commands/` | `.agents/skills/` (flat) | `.agents/skills/` (nesting allowed, this pack stays flat) |
-| Slash | `/agent-skills:<name>` | same string in the message; picker `/<name>` | same string in the message; picker `/<name>` (`/code-review` for review) |
-| Subagents | `spawn_subagent` + `agents/*.md` types | `spawn_agent`; prepend persona files | Worker / Scout / Reviewer; prepend persona files |
-| Hooks | `simplify-ignore` | none from this pack | none from this pack |
 
 ## License
 

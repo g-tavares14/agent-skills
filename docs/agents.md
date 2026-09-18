@@ -109,22 +109,6 @@ Personas in `agents/` load as plugin agent types (`agent-skills:code-reviewer`, 
 
 Plugin agent frontmatter cannot declare `hooks`, `mcpServers`, or `permissionMode: bypassPermissions` — Grok ignores those fields. Do not rely on them when authoring personas here.
 
-## Zed Agent and Zed Delta
-
-Zed and Delta do not load `agents/*.md` as named agent types. They load skills from `.agents/skills/` (project) and `~/.agents/skills/` (global). This pack keeps that tree **flat** because Zed does not discover nested skill folders. Delta could nest; we still do not, so one tree serves both.
-
-Lifecycle entry points are always `/agent-skills:<name>` (`spec`, `plan`, `build`, `test`, `constraints`, `review`, `code-simplify`, `webperf`, `ship`). Wrappers set `disable-model-invocation: true`. Zed/Delta cannot register `:` in a skill name, so the slash picker aliases are `/spec`, `/plan`, `/build`, `/test`, `/constraints`, `/code-review`, `/code-simplify`, `/webperf`, `/ship`. If the user types `/agent-skills:spec` (etc.) in the composer, run the pack command anyway. **Do not name a skill `review`** — Delta's `/review` is a built-in product command; pack review is `/agent-skills:review`.
-
-When a wrapper needs a persona:
-
-| Product | How to spawn | How to apply the persona |
-|---------|--------------|--------------------------|
-| Grok Build | `spawn_subagent` | `subagent_type` matching the persona name |
-| Zed | `spawn_agent` | Prepend `<pack-root>/agents/<role>.md` |
-| Zed Delta | subagent | Reviewer for `code-reviewer`; Worker for `security-auditor` and `test-engineer`; Scout when the work is read-only gather. Prepend the same persona file. |
-
-`/ship` still fans out three specialists in one turn, then merges in the parent. The `simplify-ignore` hook does not run on Zed or Delta.
-
 ## Adding a new persona
 
 1. Create `agents/<role>.md` with the same frontmatter format used by existing personas.
