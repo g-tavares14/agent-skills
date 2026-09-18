@@ -39,9 +39,21 @@ Both load the same Agent Skills roots — there is no separate Delta layout in t
 ./scripts/install-zed.sh
 ```
 
-That links every skill and lifecycle wrapper into `~/.agents/skills/` so they apply in every project, and hides those copies from Grok (`[skills].ignore`) so the Grok plugin stays the source of truth. Re-run after you pull. Uninstall with `./scripts/install-zed.sh --uninstall`.
+That is the Zed/Delta analog of `install-grok.sh`:
 
-Grant worktree trust in Zed/Delta so the project copy can load. Delta-only `.delta/skills/` is unused on purpose — one tree serves both products.
+| Grok Build | Zed / Zed Delta |
+|------------|-----------------|
+| Enable plugin in `~/.grok/config.toml` | Skills in `~/.agents/skills/` (every project) |
+| Plugin skills always in the catalog | Personal `AGENTS.md` always in the system prompt |
+
+The installer also hides those skill copies from Grok (`[skills].ignore`) so the Grok plugin stays the source of truth. It merges a managed block into personal `AGENTS.md` (does not replace the rest of the file):
+
+- Zed: next to `settings.json` (`~/.config/zed/AGENTS.md` on this machine)
+- Delta: `~/.config/delta/AGENTS.md`, and next to Delta's `settings.json` when that lives elsewhere
+
+Re-run after you pull. Uninstall with `./scripts/install-zed.sh --uninstall` (removes our symlinks and the managed `AGENTS.md` block only). Start a **new** agent thread after install so the instructions load.
+
+Delta-only `.delta/skills/` is unused on purpose — one tree serves both products.
 
 The `simplify-ignore` hook is **Grok-only**. Zed and Delta have no equivalent in this pack.
 
@@ -76,7 +88,7 @@ Lifecycle wrappers in `.agents/skills/` set `disable-model-invocation: true` so 
 | `.grok-plugin/marketplace.json` | Marketplace index |
 | `.grok/{skills,agents}` | Symlinks for Grok discovery when this repo is cwd |
 | `scripts/install-grok.sh` | Apply this pack as the Grok Build default |
-| `scripts/install-zed.sh` | Apply this pack as the Zed / Delta default |
+| `scripts/install-zed.sh` | Apply this pack as the Zed / Delta default (global skills + personal `AGENTS.md`) |
 
 ## Harness notes
 

@@ -1,9 +1,13 @@
 #!/bin/bash
-# Install this pack into ~/.agents/skills for Zed Agent and Zed Delta.
+# Install this pack as the machine default for Zed Agent and Zed Delta.
 #
-# Both products load the same two roots (project-local wins on name clash):
+# Skills (every project):
 #   ~/.agents/skills/              global
 #   <worktree>/.agents/skills/     already in this repo (flat — Zed cannot nest)
+#
+# Always-on instructions (Grok analog of enabling the plugin in config.toml):
+#   Zed:   AGENTS.md next to settings.json (~/.config/zed/AGENTS.md)
+#   Delta: ~/.config/delta/AGENTS.md, plus the folder that holds settings.json
 #
 # Delta-only .delta/skills/ is not used. Review in this pack is /code-review
 # because Delta's /review is a built-in product command.
@@ -21,7 +25,23 @@ GROK_HOME="${GROK_HOME:-$HOME/.grok}"
 GROK_CONFIG="$GROK_HOME/config.toml"
 MARKER="$AGENTS_HOME/.agent-skills-pack-root"
 MERGE="$ROOT/scripts/merge-grok-skills-ignore.py"
+MERGE_AGENTS="$ROOT/scripts/merge-agents-md.py"
+TEMPLATE="$ROOT/scripts/templates/zed-delta-AGENTS.md"
 UNINSTALL=0
+
+personal_agents_md() {
+  if [[ -f "$HOME/.config/zed/settings.json" ]]; then
+    printf '%s\n' "$HOME/.config/zed/AGENTS.md"
+  elif [[ -d "$HOME/Library/Application Support/Zed" ]]; then
+    printf '%s\n' "$HOME/Library/Application Support/Zed/AGENTS.md"
+  else
+    printf '%s\n' "$HOME/.config/zed/AGENTS.md"
+  fi
+  printf '%s\n' "$HOME/.config/delta/AGENTS.md"
+  if [[ -f "$HOME/Library/Application Support/delta/settings.json" ]]; then
+    printf '%s\n' "$HOME/Library/Application Support/delta/AGENTS.md"
+  fi
+}
 
 for arg in "$@"; do
   case "$arg" in
@@ -86,6 +106,10 @@ if [[ "$UNINSTALL" -eq 1 ]]; then
     fi
   done
   grok_ignore remove "${dest_ignore[@]}"
+  printf '\n==> personal AGENTS.md\n'
+  while IFS= read -r agents_md; do
+    python3 "$MERGE_AGENTS" remove "$agents_md"
+  done < <(personal_agents_md)
   if [[ -f "$MARKER" ]]; then
     marker_root="$(cat "$MARKER")"
     if [[ "$marker_root" == "$ROOT" ]]; then
@@ -130,9 +154,16 @@ printf '%s\n' "$ROOT" > "$MARKER"
 printf '\n==> hide these copies from Grok Build\n'
 grok_ignore add "${repo_ignore[@]}" "${dest_ignore[@]}"
 
+printf '\n==> personal AGENTS.md (always-on default, like Grok enabling the plugin)\n'
+while IFS= read -r agents_md; do
+  python3 "$MERGE_AGENTS" add "$agents_md" "$TEMPLATE" "$ROOT"
+done < <(personal_agents_md)
+
 printf '\nLinked %d, skipped %d.\n' "$linked" "$skipped"
-printf 'Zed and Zed Delta both load ~/.agents/skills (global) and <repo>/.agents/skills (project).\n'
-printf 'Grant worktree trust in Zed/Delta so the project copy can load.\n'
+printf 'Zed and Zed Delta now load this pack in every project:\n'
+printf '  skills:  %s\n' "$DEST"
+printf '  rules:   personal AGENTS.md (Zed + Delta config dirs)\n'
+printf 'Start a new agent thread so the instructions take effect.\n'
 printf '\nSlash commands (hyphens only, no colon prefix):\n'
 printf '  /spec  /plan  /build  /test  /constraints  /code-review  /code-simplify  /webperf  /ship\n'
 printf 'Use /code-review, not /review — /review is a Delta built-in.\n'

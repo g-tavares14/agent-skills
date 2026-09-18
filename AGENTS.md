@@ -18,7 +18,7 @@ Code examples in skills and references are **TypeScript and Python only**.
 | `.grok-plugin/marketplace.json` | Marketplace index |
 | `.grok/{skills,agents}` | Symlinks so Grok discovers skills/personas when this repo is the cwd |
 | `scripts/install-grok.sh` | Install + enable this plugin as the Grok machine default |
-| `scripts/install-zed.sh` | Symlink this pack into `~/.agents/skills/` for Zed and Delta |
+| `scripts/install-zed.sh` | Machine default for Zed/Delta: `~/.agents/skills/` plus personal `AGENTS.md` |
 
 ## Composition
 
@@ -40,7 +40,7 @@ See [docs/agents.md](docs/agents.md) and [references/orchestration-patterns.md](
 - When you add a code example, use TypeScript or Python (or both).
 - Frontend UI examples stay TypeScript/React (`tsx`).
 - After changing Grok packaging, run `./scripts/install-grok.sh` (or `grok plugin validate .` and `grok inspect`).
-- After changing `.agents/skills/`, run `./scripts/install-zed.sh`.
+- After changing `.agents/skills/` or the default Zed/Delta instructions, run `./scripts/install-zed.sh`. That writes a managed block into personal `AGENTS.md` (`~/.config/zed/AGENTS.md`, `~/.config/delta/AGENTS.md`, …) — it does not copy this file. This `AGENTS.md` stays pack-repo-only.
 
 Grok also scans `.agents/skills/` (this repo and `~/.agents/skills`). The installers add those paths to `[skills].ignore` in `~/.grok/config.toml` so Grok keeps using the plugin instead of loading the Zed copies twice.
 
