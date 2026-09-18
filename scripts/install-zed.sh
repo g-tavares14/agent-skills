@@ -1,0 +1,139 @@
+#!/bin/bash
+# Install this pack into ~/.agents/skills for Zed Agent and Zed Delta.
+#
+# Both products load the same two roots (project-local wins on name clash):
+#   ~/.agents/skills/              global
+#   <worktree>/.agents/skills/     already in this repo (flat — Zed cannot nest)
+#
+# Delta-only .delta/skills/ is not used. Review in this pack is /code-review
+# because Delta's /review is a built-in product command.
+#
+# Grok Build also scans .agents/skills (project and ~/.agents/skills). This
+# script hides those copies from Grok via [skills].ignore so the plugin stays
+# the Grok source of truth.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+AGENTS_HOME="${AGENTS_HOME:-$HOME/.agents}"
+DEST="$AGENTS_HOME/skills"
+SRC="$ROOT/.agents/skills"
+GROK_HOME="${GROK_HOME:-$HOME/.grok}"
+GROK_CONFIG="$GROK_HOME/config.toml"
+MARKER="$AGENTS_HOME/.agent-skills-pack-root"
+MERGE="$ROOT/scripts/merge-grok-skills-ignore.py"
+UNINSTALL=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --uninstall) UNINSTALL=1 ;;
+    -h|--help)
+      printf 'Usage: %s [--uninstall]\n' "$0"
+      exit 0
+      ;;
+    *)
+      printf 'error: unknown argument %s\n' "$arg" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ ! -d "$SRC" ]]; then
+  printf 'error: missing %s\n' "$SRC" >&2
+  exit 1
+fi
+
+names=()
+while IFS= read -r name; do
+  [[ -n "$name" ]] && names+=("$name")
+done < <(find "$SRC" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort)
+
+# Repo copy should stay hidden from Grok even after a global uninstall.
+repo_ignore=("$ROOT/.agents/skills")
+dest_ignore=()
+for name in "${names[@]}"; do
+  dest_ignore+=("$DEST/$name")
+done
+
+grok_ignore() {
+  local action="$1"
+  shift
+  if [[ -f "$MERGE" && "$#" -gt 0 ]]; then
+    python3 "$MERGE" "$GROK_CONFIG" "$action" "$@"
+  fi
+}
+
+if [[ "$UNINSTALL" -eq 1 ]]; then
+  printf 'Uninstall from %s\n' "$DEST"
+  removed=0
+  skipped=0
+  for name in "${names[@]}"; do
+    target="$DEST/$name"
+    if [[ -L "$target" ]]; then
+      link="$(readlink "$target")"
+      case "$link" in
+        "$SRC"/*|"$SRC")
+          rm "$target"
+          removed=$((removed + 1))
+          ;;
+        *)
+          printf 'skip (foreign symlink): %s -> %s\n' "$target" "$link"
+          skipped=$((skipped + 1))
+          ;;
+      esac
+    elif [[ -e "$target" ]]; then
+      printf 'skip (not our symlink): %s\n' "$target"
+      skipped=$((skipped + 1))
+    fi
+  done
+  grok_ignore remove "${dest_ignore[@]}"
+  if [[ -f "$MARKER" ]]; then
+    marker_root="$(cat "$MARKER")"
+    if [[ "$marker_root" == "$ROOT" ]]; then
+      rm -f "$MARKER"
+    fi
+  fi
+  printf 'Removed %d symlink(s), skipped %d.\n' "$removed" "$skipped"
+  printf 'Project copy at %s is unchanged.\n' "$SRC"
+  exit 0
+fi
+
+mkdir -p "$DEST"
+printf 'Repo:    %s\n' "$ROOT"
+printf 'Install: %s\n' "$DEST"
+
+linked=0
+skipped=0
+for name in "${names[@]}"; do
+  from="$SRC/$name"
+  to="$DEST/$name"
+  if [[ -L "$to" ]]; then
+    existing="$(readlink "$to")"
+    if [[ "$existing" == "$from" ]]; then
+      linked=$((linked + 1))
+      continue
+    fi
+    printf 'skip (symlink exists): %s -> %s\n' "$to" "$existing"
+    skipped=$((skipped + 1))
+    continue
+  fi
+  if [[ -e "$to" ]]; then
+    printf 'skip (path exists): %s\n' "$to"
+    skipped=$((skipped + 1))
+    continue
+  fi
+  ln -s "$from" "$to"
+  linked=$((linked + 1))
+done
+
+printf '%s\n' "$ROOT" > "$MARKER"
+
+printf '\n==> hide these copies from Grok Build\n'
+grok_ignore add "${repo_ignore[@]}" "${dest_ignore[@]}"
+
+printf '\nLinked %d, skipped %d.\n' "$linked" "$skipped"
+printf 'Zed and Zed Delta both load ~/.agents/skills (global) and <repo>/.agents/skills (project).\n'
+printf 'Grant worktree trust in Zed/Delta so the project copy can load.\n'
+printf '\nSlash commands (hyphens only, no colon prefix):\n'
+printf '  /spec  /plan  /build  /test  /constraints  /code-review  /code-simplify  /webperf  /ship\n'
+printf 'Use /code-review, not /review — /review is a Delta built-in.\n'
+printf 'Grok commands stay /agent-skills:<name>. Re-run after pulling this repo.\n'

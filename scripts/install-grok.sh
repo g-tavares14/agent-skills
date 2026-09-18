@@ -87,9 +87,16 @@ with open(config_path, "w", encoding="utf-8") as f:
 print("updated [plugins] paths/enabled")
 PY
 
+printf '\n==> hide Zed/Delta copies from Grok discovery\n'
+# This repo's .agents/skills is for Zed/Delta. Grok already has the plugin.
+if [[ -d "$ROOT/.agents/skills" ]]; then
+  python3 "$ROOT/scripts/merge-grok-skills-ignore.py" "$CONFIG" add "$ROOT/.agents/skills"
+fi
+
 printf '\n==> inspect\n'
 (cd "$ROOT" && grok inspect)
 
 printf '\nDone. In a Grok session, /hooks should list agent-skills (simplify-ignore).\n'
 printf 'Invoke pack commands as /agent-skills:<name> (spec, plan, build, test, review, ship, …).\n'
 printf 'This repo needs folder trust for AGENTS.md: grok --trust  (or /hooks-trust).\n'
+printf 'Zed / Zed Delta: ./scripts/install-zed.sh\n'
