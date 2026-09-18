@@ -1,15 +1,16 @@
 ---
 name: code-simplify
-description: Simplify code for clarity without changing behavior. Use when the user runs /code-simplify in Zed or Delta, or /agent-skills:code-simplify in Grok Build.
+description: Simplify code for clarity without changing behavior. Use when the user runs /agent-skills:code-simplify (any harness). Zed/Delta slash-picker alias: /code-simplify.
 disable-model-invocation: true
 ---
 
 Follow the `code-simplification` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:code-simplify`. The `simplify-ignore` hook is Grok-only.
-- **Zed / Zed Delta:** `/code-simplify` (this skill). No equivalent hook — stay inside the requested scope.
+Canonical command (Grok, Zed, Delta): **`/agent-skills:code-simplify`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/code-simplify`. If the user types `/agent-skills:code-simplify` in the composer, run this skill anyway. The `simplify-ignore` hook is Grok-only — on Zed/Delta stay inside the requested scope.
 
 Simplify recently changed code (or the specified scope) while preserving exact behavior:
 

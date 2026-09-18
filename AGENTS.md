@@ -24,10 +24,11 @@ Code examples in skills and references are **TypeScript and Python only**.
 
 - **Skills** are mandatory hops when an intent matches. Follow the steps; do not skip verification.
 - **Personas do not invoke other personas.** Slash commands (or the user) orchestrate.
-- The only multi-persona pattern this pack endorses is parallel fan-out with a merge step (`/agent-skills:ship` on Grok, `/ship` on Zed/Delta).
+- The only multi-persona pattern this pack endorses is parallel fan-out with a merge step (`/agent-skills:ship`).
 - **Grok:** spawn personas with `spawn_subagent`. Prefer `code-reviewer`, then `agent-skills:code-reviewer`.
 - **Zed:** `spawn_agent`; prepend `<pack-root>/agents/<role>.md`.
-- **Zed Delta:** Worker / Scout / Reviewer profiles — not custom types from `agents/*.md`. Prepend the persona file. Pack review is `/code-review`, not Delta's built-in `/review`.
+- **Zed Delta:** Worker / Scout / Reviewer profiles — not custom types from `agents/*.md`. Prepend the persona file. Pack review is `/agent-skills:review` (picker `/code-review`), not Delta's built-in `/review`.
+- User-facing commands are always `/agent-skills:<name>`. On Zed/Delta, if the user types that string, run the pack command even when the slash picker did not attach a skill.
 
 See [docs/agents.md](docs/agents.md) and [references/orchestration-patterns.md](references/orchestration-patterns.md).
 

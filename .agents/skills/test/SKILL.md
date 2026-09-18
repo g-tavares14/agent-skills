@@ -1,15 +1,16 @@
 ---
 name: test
-description: Run TDD workflow — write failing tests, implement, verify. For bugs, use the Prove-It pattern. Use when the user runs /test in Zed or Delta, or /agent-skills:test in Grok Build.
+description: Run TDD workflow — write failing tests, implement, verify. For bugs, use the Prove-It pattern. Use when the user runs /agent-skills:test (any harness). Zed/Delta slash-picker alias: /test.
 disable-model-invocation: true
 ---
 
 Follow the `test-driven-development` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:test`.
-- **Zed / Zed Delta:** `/test` (this skill).
+Canonical command (Grok, Zed, Delta): **`/agent-skills:test`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/test`. If the user types `/agent-skills:test` in the composer, run this skill anyway.
 
 For new features:
 

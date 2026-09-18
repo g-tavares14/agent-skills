@@ -1,12 +1,18 @@
 ---
 name: ship
-description: Pre-launch checklist via parallel specialist personas, then a go/no-go decision. Use when the user runs /ship in Zed or Delta, or /agent-skills:ship in Grok Build.
+description: Pre-launch checklist via parallel specialist personas, then a go/no-go decision. Use when the user runs /agent-skills:ship (any harness). Zed/Delta slash-picker alias: /ship.
 disable-model-invocation: true
 ---
 
 Follow the `shipping-and-launch` skill in this same `.agents/skills/` tree.
 
-`/ship` (Zed / Delta) and `/agent-skills:ship` (Grok) are a **fan-out orchestrator**. Run three specialist personas in parallel against the current change, then merge their reports into a single go/no-go decision with a rollback plan. The personas operate independently — no shared state, no ordering — which is what makes parallel execution safe and useful here.
+## Invoke
+
+Canonical command (Grok, Zed, Delta): **`/agent-skills:ship`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/ship`. If the user types `/agent-skills:ship` in the composer, run this skill anyway.
+
+`/agent-skills:ship` is a **fan-out orchestrator**. Run three specialist personas in parallel against the current change, then merge their reports into a single go/no-go decision with a rollback plan. The personas operate independently — no shared state, no ordering — which is what makes parallel execution safe and useful here.
 
 ## Harness
 

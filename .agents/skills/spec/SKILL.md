@@ -1,15 +1,16 @@
 ---
 name: spec
-description: Start spec-driven development — write a structured specification before writing code. Use when the user runs /spec in Zed or Delta, or /agent-skills:spec in Grok Build.
+description: Start spec-driven development — write a structured specification before writing code. Use when the user runs /agent-skills:spec (any harness). Zed/Delta slash-picker alias: /spec.
 disable-model-invocation: true
 ---
 
 Follow the `spec-driven-development` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:spec`.
-- **Zed / Zed Delta:** `/spec` (this skill). Zed has no colon namespaces.
+Canonical command (Grok, Zed, Delta): **`/agent-skills:spec`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/spec`. If the user types `/agent-skills:spec` in the composer, run this skill anyway.
 
 Begin by understanding what the user wants to build. Ask clarifying questions about:
 

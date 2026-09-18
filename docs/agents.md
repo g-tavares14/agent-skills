@@ -17,7 +17,7 @@ Three layers, each with a distinct job:
 |-------|-----------|---------|------------------|
 | **Skill** | A workflow with steps and exit criteria | `code-review-and-quality` | The *how* — invoked from inside a persona or command |
 | **Persona** | A role with a perspective and an output format | `code-reviewer` | The *who* — adopts a viewpoint, produces a report |
-| **Command** | A user-facing entry point | `/agent-skills:review` (Grok), `/code-review` (Zed/Delta), `/ship` | The *when* — composes personas and skills |
+| **Command** | A user-facing entry point | `/agent-skills:review`, `/agent-skills:ship` | The *when* — composes personas and skills |
 
 The user (or a slash command) is the orchestrator. **Personas do not call other personas.** Skills are mandatory hops inside a persona's workflow.
 
@@ -113,7 +113,7 @@ Plugin agent frontmatter cannot declare `hooks`, `mcpServers`, or `permissionMod
 
 Zed and Delta do not load `agents/*.md` as named agent types. They load skills from `.agents/skills/` (project) and `~/.agents/skills/` (global). This pack keeps that tree **flat** because Zed does not discover nested skill folders. Delta could nest; we still do not, so one tree serves both.
 
-Lifecycle entry points are skill wrappers with `disable-model-invocation: true`: `/spec`, `/plan`, `/build`, `/test`, `/constraints`, `/code-review`, `/code-simplify`, `/webperf`, `/ship`. **Do not name a skill `review`** — Delta's `/review` is a built-in product command.
+Lifecycle entry points are always `/agent-skills:<name>` (`spec`, `plan`, `build`, `test`, `constraints`, `review`, `code-simplify`, `webperf`, `ship`). Wrappers set `disable-model-invocation: true`. Zed/Delta cannot register `:` in a skill name, so the slash picker aliases are `/spec`, `/plan`, `/build`, `/test`, `/constraints`, `/code-review`, `/code-simplify`, `/webperf`, `/ship`. If the user types `/agent-skills:spec` (etc.) in the composer, run the pack command anyway. **Do not name a skill `review`** — Delta's `/review` is a built-in product command; pack review is `/agent-skills:review`.
 
 When a wrapper needs a persona:
 

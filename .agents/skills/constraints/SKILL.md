@@ -1,15 +1,16 @@
 ---
 name: constraints
-description: Define and enforce this project's quality bar — interview, sane defaults, CONSTRAINTS.md. Use when the user runs /constraints in Zed or Delta, or /agent-skills:constraints in Grok Build.
+description: Define and enforce this project's quality bar — interview, sane defaults, CONSTRAINTS.md. Use when the user runs /agent-skills:constraints (any harness). Zed/Delta slash-picker alias: /constraints.
 disable-model-invocation: true
 ---
 
 Follow the `constraint-driven-development` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:constraints`.
-- **Zed / Zed Delta:** `/constraints` (this skill).
+Canonical command (Grok, Zed, Delta): **`/agent-skills:constraints`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/constraints`. If the user types `/agent-skills:constraints` in the composer, run this skill anyway.
 
 Parse the rest of the user message as the sub-command (`check`, `guard`, `ratchet`) or extra context. With no sub-command, set up constraints for this repository.
 

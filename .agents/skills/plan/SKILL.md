@@ -1,15 +1,16 @@
 ---
 name: plan
-description: Break work into small verifiable tasks with acceptance criteria and dependency ordering. Use when the user runs /plan in Zed or Delta, or /agent-skills:plan in Grok Build.
+description: Break work into small verifiable tasks with acceptance criteria and dependency ordering. Use when the user runs /agent-skills:plan (any harness). Zed/Delta slash-picker alias: /plan.
 disable-model-invocation: true
 ---
 
 Follow the `planning-and-task-breakdown` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:plan` (Grok's built-in `/plan` is a different command).
-- **Zed / Zed Delta:** `/plan` (this skill).
+Canonical command (Grok, Zed, Delta): **`/agent-skills:plan`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/plan`. If the user types `/agent-skills:plan` in the composer, run this skill anyway. Grok's built-in `/plan` is a different command.
 
 Read the existing spec (SPEC.md or equivalent) and the relevant codebase sections. Then:
 

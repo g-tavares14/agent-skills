@@ -5,14 +5,13 @@ Engineering skills, specialist agents, and lifecycle slash commands — packaged
 Derived from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT).
 
 ```
-  DEFINE     PLAN      BUILD      VERIFY     REVIEW          SHIP
-  /spec      /plan     /build     /test      /code-review    /ship     Zed / Delta
-  /agent-skills:spec   …         …          …   /agent-skills:review   /agent-skills:ship   Grok
+  DEFINE                 PLAN                  BUILD                 VERIFY                REVIEW                 SHIP
+  /agent-skills:spec     /agent-skills:plan    /agent-skills:build   /agent-skills:test    /agent-skills:review   /agent-skills:ship
 ```
 
-On **Grok Build**, always invoke this pack as `/agent-skills:<command>`. That is the plugin namespace, so it never steals Grok's `/plan` or `/review`.
+Always invoke this pack as `/agent-skills:<command>` (Grok, Zed, and Delta). That is the plugin namespace on Grok, so it never steals Grok's `/plan` or `/review`.
 
-On **Zed** and **Zed Delta**, slash names are the skill `name` (hyphens only, no colon). Delta's `/review` is a built-in product command — this pack's review is `/code-review`.
+Zed and Delta cannot register `:` in a skill name. If you type `/agent-skills:spec` in the composer, the agent still runs this pack. The slash picker aliases are `/spec`, `/plan`, `/build`, `/test`, `/constraints`, `/code-review`, `/code-simplify`, `/webperf`, `/ship`. Delta's `/review` is a built-in product command — this pack's review is `/agent-skills:review` (picker `/code-review`).
 
 ## Install
 
@@ -59,18 +58,18 @@ The `simplify-ignore` hook is **Grok-only**. Zed and Delta have no equivalent in
 
 ## Commands
 
-| Lifecycle | Grok Build | Zed / Zed Delta | Skill / persona |
-|-----------|------------|-----------------|-----------------|
-| Spec | `/agent-skills:spec` | `/spec` | `spec-driven-development` |
-| Plan | `/agent-skills:plan` | `/plan` | `planning-and-task-breakdown` |
-| Build | `/agent-skills:build` | `/build` | `incremental-implementation` + `test-driven-development` |
-| Build (all) | `/agent-skills:build auto` | `/build auto` | same |
-| Test | `/agent-skills:test` | `/test` | `test-driven-development` |
-| Constraints | `/agent-skills:constraints` | `/constraints` | `constraint-driven-development` |
-| Review | `/agent-skills:review` | `/code-review` | `code-review-and-quality` |
-| Simplify | `/agent-skills:code-simplify` | `/code-simplify` | `code-simplification` |
-| Web perf | `/agent-skills:webperf` | `/webperf` | `web-performance-auditor` |
-| Ship | `/agent-skills:ship` | `/ship` | `shipping-and-launch` + parallel personas |
+| Command | Picker alias (Zed / Delta) | Skill / persona |
+|---------|----------------------------|-----------------|
+| `/agent-skills:spec` | `/spec` | `spec-driven-development` |
+| `/agent-skills:plan` | `/plan` | `planning-and-task-breakdown` |
+| `/agent-skills:build` | `/build` | `incremental-implementation` + `test-driven-development` |
+| `/agent-skills:build auto` | `/build auto` | same |
+| `/agent-skills:test` | `/test` | `test-driven-development` |
+| `/agent-skills:constraints` | `/constraints` | `constraint-driven-development` |
+| `/agent-skills:review` | `/code-review` | `code-review-and-quality` |
+| `/agent-skills:code-simplify` | `/code-simplify` | `code-simplification` |
+| `/agent-skills:webperf` | `/webperf` | `web-performance-auditor` |
+| `/agent-skills:ship` | `/ship` | `shipping-and-launch` + parallel personas |
 
 Lifecycle wrappers in `.agents/skills/` set `disable-model-invocation: true` so they only run when you type the slash command. The 25 workflow skills stay auto-invocable.
 
@@ -95,7 +94,7 @@ Lifecycle wrappers in `.agents/skills/` set `disable-model-invocation: true` so 
 | | Grok Build | Zed Agent | Zed Delta |
 |--|------------|-----------|-----------|
 | Skills | Plugin `skills/` + `commands/` | `.agents/skills/` (flat) | `.agents/skills/` (nesting allowed, this pack stays flat) |
-| Slash | `/agent-skills:<name>` | `/<name>` | `/<name>` |
+| Slash | `/agent-skills:<name>` | same string in the message; picker `/<name>` | same string in the message; picker `/<name>` (`/code-review` for review) |
 | Subagents | `spawn_subagent` + `agents/*.md` types | `spawn_agent`; prepend persona files | Worker / Scout / Reviewer; prepend persona files |
 | Hooks | `simplify-ignore` | none from this pack | none from this pack |
 

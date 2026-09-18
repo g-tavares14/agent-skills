@@ -1,16 +1,22 @@
 ---
 name: webperf
-description: Run a web performance audit via the web-performance-auditor persona. Use when the user runs /webperf in Zed or Delta, or /agent-skills:webperf in Grok Build.
+description: Run a web performance audit via the web-performance-auditor persona. Use when the user runs /agent-skills:webperf (any harness). Zed/Delta slash-picker alias: /webperf.
 disable-model-invocation: true
 ---
 
 Follow `performance-optimization` in this same `.agents/skills/` tree. Load the `web-performance-auditor` persona from the pack (see Pack root).
 
+## Invoke
+
+Canonical command (Grok, Zed, Delta): **`/agent-skills:webperf`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker alias is `/webperf`. If the user types `/agent-skills:webperf` in the composer, run this skill anyway.
+
 ## Harness
 
-- **Grok Build:** `/agent-skills:webperf`. Spawn `web-performance-auditor` (or `agent-skills:web-performance-auditor`) with `spawn_subagent`.
-- **Zed:** `/webperf`. Spawn with `spawn_agent` and prepend `<pack-root>/agents/web-performance-auditor.md`.
-- **Zed Delta:** `/webperf`. Spawn a Scout (read-only gather) or Worker; prepend the same persona file. Delta has no custom agent types.
+- **Grok Build:** Spawn `web-performance-auditor` (or `agent-skills:web-performance-auditor`) with `spawn_subagent`.
+- **Zed:** Spawn with `spawn_agent` and prepend `<pack-root>/agents/web-performance-auditor.md`.
+- **Zed Delta:** Spawn a Scout (read-only gather) or Worker; prepend the same persona file. Delta has no custom agent types.
 
 ## Pack root
 

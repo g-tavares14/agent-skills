@@ -1,6 +1,6 @@
 ---
 name: using-agent-skills
-description: Discovers and invokes agent skills. Use when starting a session, or when you need to decide which skill or workflow applies to the piece of work at hand. This is the meta-skill that governs how all other skills are discovered and invoked.
+description: Discovers and invokes agent skills. Use when starting a session, when the user runs /agent-skills:spec or another /agent-skills: lifecycle command, or when you need to decide which skill or workflow applies to the piece of work at hand. This is the meta-skill that governs how all other skills are discovered and invoked.
 ---
 
 # Using Agent Skills
@@ -8,6 +8,14 @@ description: Discovers and invokes agent skills. Use when starting a session, or
 ## Overview
 
 Agent Skills is a collection of engineering workflow skills organized by development phase. Each skill encodes a specific process that senior engineers follow. This meta-skill helps you discover and apply the right skill for your current task.
+
+## Lifecycle commands
+
+User-facing pack commands are always `/agent-skills:<name>`:
+
+`/agent-skills:spec` `/agent-skills:plan` `/agent-skills:build` `/agent-skills:test` `/agent-skills:constraints` `/agent-skills:review` `/agent-skills:code-simplify` `/agent-skills:webperf` `/agent-skills:ship`
+
+If the user types one of those strings, run the matching workflow. On Zed and Zed Delta the slash picker cannot register a colon (skill names are hyphens only), so `/spec` `/plan` `/build` `/test` `/constraints` `/code-review` `/code-simplify` `/webperf` `/ship` are picker aliases for the same commands. Treat `/agent-skills:review` as this pack's review — not Delta's built-in `/review`.
 
 ## Skill Discovery
 

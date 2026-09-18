@@ -1,15 +1,16 @@
 ---
 name: build
-description: Implement tasks incrementally — build, test, verify, commit. Add "auto" to run the whole plan in one approved pass. Use when the user runs /build in Zed or Delta, or /agent-skills:build in Grok Build.
+description: Implement tasks incrementally — build, test, verify, commit. Add "auto" to run the whole plan in one approved pass. Use when the user runs /agent-skills:build (any harness). Zed/Delta slash-picker alias: /build.
 disable-model-invocation: true
 ---
 
 Follow `incremental-implementation` alongside `test-driven-development` in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:build` and `/agent-skills:build auto`.
-- **Zed / Zed Delta:** `/build` and `/build auto` (this skill).
+Canonical command (Grok, Zed, Delta): **`/agent-skills:build`** and **`/agent-skills:build auto`**.
+
+Zed and Delta cannot register `:` in a skill name, so the slash picker aliases are `/build` and `/build auto`. If the user types `/agent-skills:build` in the composer, run this skill anyway.
 
 ## Modes
 
@@ -35,7 +36,7 @@ Pick the next pending task from the plan. Then:
 
 Use this once a spec exists and you want to collapse plan + build into one run. It removes the manual stepping between tasks — not the verification. Every task still earns a passing test and its own commit.
 
-1. Require a spec. Look only for a spec at a known path: SPEC.md at the repo root, docs/SPEC.md, or a file under spec/. A README or arbitrary doc does NOT count. If none exists, stop and tell the user to run spec first (`/agent-skills:spec` on Grok, `/spec` on Zed/Delta) — do not invent requirements.
+1. Require a spec. Look only for a spec at a known path: SPEC.md at the repo root, docs/SPEC.md, or a file under spec/. A README or arbitrary doc does NOT count. If none exists, stop and tell the user to run `/agent-skills:spec` first — do not invent requirements.
 2. Establish a clean baseline. Run `git status --porcelain`. If there are uncommitted changes outside the expected planning artifacts (SPEC.md, docs/SPEC.md, spec/*, tasks/plan.md, tasks/todo.md), stop and ask the user to commit, stash, or confirm how to handle them. Autonomous per-task commits must not absorb unrelated local work, or the clean-rollback guarantee breaks.
 3. Plan if needed. If there is no tasks/plan.md, follow `planning-and-task-breakdown` to generate one.
 4. Single checkpoint. Present the full plan and wait for an unambiguous affirmative (e.g. "approve", "go", "yes"). Treat hedged responses ("looks reasonable", "I guess") as NOT approved. This is the only human gate — after approval, run autonomously. If you generated tasks/plan.md, commit it as a single preparatory commit now so it doesn't bleed into the first task's commit.
@@ -44,7 +45,7 @@ Use this once a spec exists and you want to collapse plan + build into one run. 
    - a test can't be made to pass or the build breaks without an obvious fix → follow `debugging-and-error-recovery`
    - the spec is ambiguous, or a task needs a decision the spec doesn't cover
    - a task is high-risk or irreversible — auth/permission changes, destructive data migrations, payments, deletions, deploys, anything touching secrets, or anything you can't undo with `git revert` → follow `doubt-driven-development` and get explicit sign-off before continuing
-   After the user resolves a blocker, they re-invoke build `auto` — it resumes from the next pending task.
+   After the user resolves a blocker, they re-invoke `/agent-skills:build auto` — it resumes from the next pending task.
 7. Summarize at the end: tasks completed, tests added, commits made, and anything skipped, flagged, or left for the user.
 
 If any step fails, follow `debugging-and-error-recovery`.

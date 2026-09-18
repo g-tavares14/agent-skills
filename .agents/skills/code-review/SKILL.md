@@ -1,16 +1,16 @@
 ---
 name: code-review
-description: Five-axis code review — correctness, readability, architecture, security, performance. Use when the user runs /code-review in Zed or Delta, or /agent-skills:review in Grok Build. Not Delta's built-in /review.
+description: Five-axis code review — correctness, readability, architecture, security, performance. Use when the user runs /agent-skills:review (any harness). Zed/Delta slash-picker alias: /code-review. Not Delta's built-in /review.
 disable-model-invocation: true
 ---
 
 Follow the `code-review-and-quality` skill in this same `.agents/skills/` tree.
 
-## Harness
+## Invoke
 
-- **Grok Build:** `/agent-skills:review` (Grok's built-in `/review` is a different command).
-- **Zed:** `/code-review` (this skill).
-- **Zed Delta:** `/code-review` (this skill). Delta's `/review` is a built-in product command — do not steal it.
+Canonical command (Grok, Zed, Delta): **`/agent-skills:review`**.
+
+Zed and Delta cannot register `:` in a skill name, and Delta's `/review` is a built-in product command, so the slash picker alias is `/code-review`. If the user types `/agent-skills:review` in the composer, run this skill anyway. Do not treat Delta's `/review` as this pack.
 
 Review the current changes (staged or recent commits) across all five axes:
 
