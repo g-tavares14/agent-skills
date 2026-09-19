@@ -1,0 +1,6 @@
+interface:
+  display_name: "Spec"
+  short_description: "Define requirements before implementation"
+  default_prompt: "Use $spec to define this change before implementation."
+policy:
+  allow_implicit_invocation: false

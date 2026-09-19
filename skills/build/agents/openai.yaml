@@ -1,0 +1,6 @@
+interface:
+  display_name: "Build"
+  short_description: "Implement planned work in verified slices"
+  default_prompt: "Use $build to implement the next planned task."
+policy:
+  allow_implicit_invocation: false

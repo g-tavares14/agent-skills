@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "agent-skills",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Engineering skills covering spec, plan, build, verify, review, and ship — examples in TypeScript and Python.",
       "source": {
         "source": "local",

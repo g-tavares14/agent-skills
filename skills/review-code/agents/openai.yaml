@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Code"
+  short_description: "Review changes across five quality axes"
+  default_prompt: "Use $review-code to review the current changes."
+policy:
+  allow_implicit_invocation: false

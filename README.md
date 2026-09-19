@@ -7,11 +7,12 @@ Derived from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skill
 ```
   DEFINE                 PLAN                  BUILD                 VERIFY                REVIEW                 SHIP
   /agent-skills:spec     /agent-skills:plan    /agent-skills:build   /agent-skills:test    /agent-skills:review   /agent-skills:ship
+  $spec                  $plan-work            $build                $test                 $review-code           $ship
 ```
 
 On **Grok Build**, always invoke this pack as `/agent-skills:<command>`. That is the plugin namespace, so it never steals Grok's `/plan` or `/review`. Grok may still list an uncontested short alias (`/spec`, `/build`, …) in the menu — use the prefixed form anyway.
 
-On **Codex**, invoke the skill name in chat, for example `@spec-driven-development`. Slash commands in `commands/` are Grok-only.
+On **Codex**, invoke a short lifecycle alias with `$`, such as `$spec`, or invoke a canonical skill such as `$spec-driven-development`. Slash commands in `commands/` are Grok-only.
 
 ## Install
 
@@ -39,7 +40,7 @@ codex plugin add agent-skills@gtavares-skills
 codex plugin list --marketplace gtavares-skills
 ```
 
-Start a new Codex task and invoke `@spec-driven-development`. Codex reads the root `skills/` directory through `.codex-plugin/plugin.json`, following the same native packaging model as the upstream repository.
+Start a new Codex task and invoke `$spec`. Codex reads the root `skills/` directory through `.codex-plugin/plugin.json`, following the same native packaging model as the upstream repository.
 
 ### Optional — only skills in Codex
 
@@ -58,6 +59,8 @@ npx skills add g-tavares14/grok-agent-skills --agent codex --skill code-review-a
 
 Add `--global` to install for all your projects. This route installs skill folders only and does not include the repo-level `references/` directory used by supplementary checklists. Grok installation uses its native plugin command above.
 
+The short lifecycle aliases delegate to canonical skills. When using the skills-only route, install the complete pack or select each alias together with the canonical workflow listed below.
+
 ## Commands
 
 | Command | Skill / persona |
@@ -73,13 +76,24 @@ Add `--global` to install for all your projects. This route installs skill folde
 | `/agent-skills:webperf` | `web-performance-auditor` |
 | `/agent-skills:ship` | `shipping-and-launch` + parallel `code-reviewer`, `security-auditor`, `test-engineer` |
 
-On Codex, invoke the skill in the right-hand column with `@`, such as `@spec-driven-development`, instead of the Grok slash command.
+On Codex, use the short lifecycle aliases shown below. Their implicit invocation is disabled, so they do not compete with the canonical skills during automatic skill selection.
+
+| Stage | Codex alias | Canonical workflow |
+|-------|-------------|--------------------|
+| Define | `$spec` | `$spec-driven-development` |
+| Plan | `$plan-work` | `$planning-and-task-breakdown` |
+| Build | `$build` | `$incremental-implementation` + `$test-driven-development` |
+| Verify | `$test` | `$test-driven-development` |
+| Review | `$review-code` | `$code-review-and-quality` |
+| Ship | `$ship` | `$shipping-and-launch` |
+
+The full Codex flow is `$spec` → `$plan-work` → `$build` → `$test` → `$review-code` → `$ship`. Use `$build auto` after approving a spec and plan to execute all remaining tasks without pausing between reversible slices.
 
 ## Layout
 
 | Path | Role |
 |------|------|
-| `skills/` | 25 workflows |
+| `skills/` | 25 workflows + 6 explicit Codex aliases |
 | `agents/` | 4 Grok specialist personas |
 | `commands/*.md` | Grok slash commands |
 | `hooks/hooks.json` | Grok plugin hook (`simplify-ignore`) |
