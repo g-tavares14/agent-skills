@@ -1,0 +1,22 @@
+{
+  "name": "gtavares-skills",
+  "interface": {
+    "displayName": "gtavares-skills"
+  },
+  "plugins": [
+    {
+      "name": "agent-skills",
+      "version": "0.2.0",
+      "description": "Engineering skills covering spec, plan, build, verify, review, and ship — examples in TypeScript and Python.",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

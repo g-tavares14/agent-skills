@@ -16,7 +16,7 @@ result[3] = buf[3] ^ key[3];
 /* simplify-ignore-end */
 ```
 
-2. This plugin registers the hook in `hooks/hooks.json`. `./scripts/install-grok.sh` installs it. Confirm in `/hooks`. Cache files go in `<workspace>/.grok/.simplify-ignore-cache/` (gitignored).
+2. This plugin registers the hook in `hooks/hooks.json`. Install the plugin with `grok plugin install https://github.com/g-tavares14/grok-agent-skills.git`, then confirm it in `/hooks`. Cache files go in `<workspace>/.grok/.simplify-ignore-cache/` (gitignored).
 
 3. Run `/agent-skills:code-simplify` — protected blocks become `/* BLOCK_de115a1d: perf-critical */` placeholders. The model reasons about surrounding code without seeing the protected implementation.
 
