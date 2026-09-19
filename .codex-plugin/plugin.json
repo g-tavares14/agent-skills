@@ -1,6 +1,6 @@
 {
   "name": "agent-skills",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Engineering skills, agents, and lifecycle commands for TypeScript and Python.",
   "author": {
     "name": "gtavares",
@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "Agent Skills",
     "shortDescription": "Engineering workflows for spec, plan, build, test, review, and ship — TypeScript and Python.",
-    "longDescription": "Agent Skills bundles 25 engineering workflows covering requirements, planning, implementation, testing, review, and shipping. Examples are TypeScript and Python only.",
+    "longDescription": "Agent Skills bundles 25 engineering workflows and six explicit Codex lifecycle aliases covering requirements, planning, implementation, testing, review, and shipping. Examples are TypeScript and Python only.",
     "developerName": "gtavares",
     "category": "Productivity",
     "capabilities": [

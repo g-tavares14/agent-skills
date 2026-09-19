@@ -1,0 +1,6 @@
+interface:
+  display_name: "Plan Work"
+  short_description: "Turn a specification into ordered tasks"
+  default_prompt: "Use $plan-work to break this specification into verifiable tasks."
+policy:
+  allow_implicit_invocation: false

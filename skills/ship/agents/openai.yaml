@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ship"
+  short_description: "Assess release readiness and rollback"
+  default_prompt: "Use $ship to assess whether the current change is ready to release."
+policy:
+  allow_implicit_invocation: false
