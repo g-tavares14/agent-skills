@@ -1,21 +1,46 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agent-skills",
-  "version": "0.3.0",
-  "description": "Engineering skills, agents, and lifecycle commands for TypeScript and Python.",
+  "version": "1.0.0",
+  "description": "Codex engineering workflows for specification, planning, building, verification, and review.",
   "author": {
-    "name": "gtavares"
+    "name": "gtavares",
+    "url": "https://github.com/g-tavares14"
   },
+  "homepage": "https://github.com/g-tavares14/agent-skills",
+  "repository": "https://github.com/g-tavares14/agent-skills",
   "license": "MIT",
-  "commands": "./commands",
-  "hooks": "./hooks/hooks.json",
   "keywords": [
+    "codex",
     "skills",
-    "agents",
+    "engineering",
     "typescript",
     "python",
     "spec",
-    "tdd",
-    "review",
-    "ship"
-  ]
+    "plan",
+    "build",
+    "verify",
+    "review"
+  ],
+  "extensions": {
+    "com.openai": {
+      "hooks": "./hooks/hooks.json",
+      "interface": {
+        "displayName": "Agent Skills",
+        "shortDescription": "Five Codex workflows for engineering work.",
+        "longDescription": "Define requirements, plan tasks, build in small slices, verify behavior, and review changes. Includes reusable engineering skills for TypeScript and Python.",
+        "developerName": "gtavares",
+        "category": "Productivity",
+        "capabilities": [
+          "Interactive",
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Use $spec, $plan, $build, $verify, and $review for this engineering task.",
+          "Help me choose an engineering skill for this task."
+        ]
+      }
+    }
+  }
 }

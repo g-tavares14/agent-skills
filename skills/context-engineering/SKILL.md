@@ -23,7 +23,7 @@ Structure context from most persistent to most transient:
 
 ```
 ┌─────────────────────────────────────┐
-│  1. Rules Files (CLAUDE.md, etc.)   │ ← Always loaded, project-wide
+│  1. Rules File (AGENTS.md)          │ ← Project-wide Codex instructions
 ├─────────────────────────────────────┤
 │  2. Spec / Architecture Docs        │ ← Loaded per feature/session
 ├─────────────────────────────────────┤
@@ -39,7 +39,7 @@ Structure context from most persistent to most transient:
 
 Create a rules file that persists across sessions. This is the highest-leverage context you can provide.
 
-**AGENTS.md** (Grok and most coding agents):
+**AGENTS.md** (Codex project instructions):
 ```markdown
 # Project: [Name]
 
@@ -62,11 +62,6 @@ Python: `pytest` · `ruff check .` · `ruff format .` · `mypy .` · `uvicorn ap
 - Ask before modifying database schema
 - Always run tests before committing
 ```
-
-**Equivalent files for other tools:**
-- `CLAUDE.md` (Claude Code)
-- `.cursorrules` or `.cursor/rules/*.md` (Cursor)
-- `.github/copilot-instructions.md` (GitHub Copilot)
 
 ### Level 2: Specs and Architecture
 

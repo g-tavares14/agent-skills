@@ -1,6 +1,6 @@
 ---
 name: constraint-driven-development
-description: Establishes a project's quality bar as a written contract and stops agents quietly lowering it. Use when the user runs /agent-skills:constraints. Interviews the user on which dimensions matter, supplies sane default thresholds when they have no number in mind, records everything in CONSTRAINTS.md, and watches the diff for a weakened bar — new @ts-ignore or eslint-disable suppressions, skipped or deleted tests, assertions stripped out, unimplemented stubs, thresholds edited down. Use when no quality bar is written down, when the user says "set up constraints" or "define our standards", when the user wants dimensions they care about — accessibility, web performance, coverage — set up as enforced constraints, when an agent keeps silencing checks or skipping tests to get to green, when you need a coverage or performance threshold and don't know what number to pick, or when an agent writes more code than anyone will read.
+description: Establishes measurable quality constraints and checks changes against them. Use when defining a project quality bar or when a change might weaken tests, coverage, or safeguards.
 ---
 
 # Constraint-Driven Development
@@ -24,7 +24,7 @@ Apply this skill when:
 - An agent is producing volume nobody is reading line by line
 - CI has checks but nobody can say which ones block a merge and which ones are decoration
 - Coverage, performance, or accessibility numbers get argued about per-PR instead of decided once
-- You're about to run `/agent-skills:build auto` or any autonomous loop, and the only thing standing between it and main is a test suite the agent also wrote
+- You're about to run `$build auto` or any autonomous loop, and the only thing standing between it and main is a test suite the agent also wrote
 
 **When NOT to use:**
 
@@ -50,7 +50,7 @@ Never ask what you can read. Before the first question, gather:
 | Existing linters | `eslint.config.*`, `biome.json`, `.ruff.toml` |
 | Coverage today | `coverage/` output, or run the suite once |
 | CI | `.github/workflows/`, `.gitlab-ci.yml` |
-| Agent harness | `.claude/`, `.codex/`, `AGENTS.md` |
+| Agent harness | `.codex/`, `AGENTS.md` |
 
 Report what you found in two lines, then ask only what's left.
 
@@ -137,7 +137,7 @@ number and no command in this column is an aspiration, not a constraint.
 | W1 | `no-explicit-any` | `src/legacy/**` | Rewrite tracked in ENG-441 | @addy | 2026-11-01 |
 ```
 
-Then add one line to `AGENTS.md` and `CLAUDE.md`: `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
+Add this line to the project's `AGENTS.md`: `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
 
 ### Step 4: Install what each dimension needs
 
@@ -200,10 +200,11 @@ The single biggest mistake is running everything everywhere. A check that stalls
 
 | Phase | Command | What runs | Budget |
 |-------|---------|-----------|--------|
-| BUILD | `/agent-skills:build` | Types, lint, secrets, the floor | under 5s, changed file only |
-| VERIFY | `/agent-skills:test` | Related tests, coverage on changed lines | under 90s |
-| REVIEW | `/agent-skills:review` | Everything, plus the guards below | minutes |
-| SHIP | `/agent-skills:ship` | Direction checks, no regressions | CI |
+| SPEC | `$spec` | Requirements and boundaries | minutes |
+| PLAN | `$plan` | Dependencies and verifiable tasks | minutes |
+| BUILD | `$build` | Fast checks for the changed slice | under 5s, changed file only |
+| VERIFY | `$verify` | Related tests and coverage | under 90s |
+| REVIEW | `$review` | Full quality and guard review | minutes |
 
 Two rules that keep this tolerable:
 
@@ -309,7 +310,7 @@ The skill was applied correctly when:
 - [ ] At least one constraint is external (not judged by this project's own tests)
 - [ ] Measured-only metrics record today's value and a direction
 - [ ] Exceptions have an owner and an expiry date
-- [ ] `AGENTS.md` or `CLAUDE.md` points at the file
+- [ ] `AGENTS.md` points at the file
 - [ ] A trial run on the current branch produces no failures the user disagrees with
 
 ## See Also

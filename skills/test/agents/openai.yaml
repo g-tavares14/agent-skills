@@ -1,6 +1,0 @@
-interface:
-  display_name: "Test"
-  short_description: "Develop and fix behavior with tests"
-  default_prompt: "Use $test to implement this behavior with a test-driven workflow."
-policy:
-  allow_implicit_invocation: false

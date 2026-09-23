@@ -1,36 +1,16 @@
 {
+  "description": "Protect simplify-ignore blocks from Codex apply_patch edits.",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Read|read_file",
+        "matcher": "^apply_patch$",
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${GROK_PLUGIN_ROOT}/hooks/simplify-ignore.sh\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit|search_replace|write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${GROK_PLUGIN_ROOT}/hooks/simplify-ignore.sh\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${GROK_PLUGIN_ROOT}/hooks/simplify-ignore.sh\"",
-            "timeout": 10
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/simplify_ignore_guard.py\"",
+            "commandWindows": "py -3 \"%PLUGIN_ROOT%\\hooks\\simplify_ignore_guard.py\"",
+            "timeout": 10,
+            "statusMessage": "Checking protected code blocks"
           }
         ]
       }

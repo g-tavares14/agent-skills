@@ -1,6 +1,6 @@
 ---
 name: shipping-and-launch
-description: Prepares production launches. Use when the user runs /agent-skills:ship. Use when preparing to deploy to production, or when asking what needs to be in place before shipping. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.
+description: Prepares production launches. Use when planning a deployment, setting up monitoring, evaluating a staged rollout, or defining a rollback strategy. This is a specialized workflow outside the five-step lifecycle.
 ---
 
 # Shipping and Launch

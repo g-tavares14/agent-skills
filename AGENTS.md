@@ -1,45 +1,52 @@
 # AGENTS.md
 
-Guidance for agents working **in this repository** (the Grok Build + Codex skills pack). Do not copy this file into application repos — those get their own `AGENTS.md`. The reusable assets are `skills/`, `agents/`, `commands/`, `hooks/`, and `references/`.
-
-Code examples in skills and references are **TypeScript and Python only**.
+Guidance for Codex working in this repository. The package targets Codex CLI and Codex in the ChatGPT app. Do not copy this file into application repositories; they need their own `AGENTS.md`. The reusable assets are `skills/`, `hooks/`, `references/`, and `docs/`.
 
 ## Layout
 
 | Path | Role |
-|------|------|
-| `skills/<name>/SKILL.md` | Workflows (the *how*) |
-| `agents/<role>.md` | Personas (the *who*) |
-| `commands/*.md` | Grok slash commands (the *when*) |
-| `hooks/hooks.json` | Grok plugin hook (`simplify-ignore`) |
+|---|---|
+| `skills/<name>/SKILL.md` | Codex workflows and reusable engineering skills |
+| `skills/<name>/agents/openai.yaml` | Skill presentation and invocation policy |
+| `hooks/hooks.json` | Codex lifecycle hook registration |
+| `hooks/simplify_ignore_guard.py` | Protected block check for `apply_patch` |
 | `references/` | Shared checklists cited by skills |
-| `plugin.json` | Grok plugin manifest |
-| `.grok-plugin/marketplace.json` | Grok marketplace index |
-| `.codex-plugin/plugin.json` | Codex plugin manifest |
-| `.agents/plugins/marketplace.json` | Codex marketplace catalog |
+| `docs/` | Package and workflow documentation |
+| `plugin.json` | Portable Agent Plugins manifest |
+| `.agents/plugins/marketplace.json` | Codex app repository marketplace |
+
+## Workflow
+
+The only lifecycle shortcuts are `$spec` → `$plan` → `$build` → `$verify` → `$review`. Canonical engineering skills remain available by name for specialized work.
 
 ## Composition
 
-- **Skills** are mandatory hops when an intent matches. Follow the steps; do not skip verification.
-- **Personas do not invoke other personas.** Slash commands (or the user) orchestrate.
-- The only multi-persona pattern this pack endorses is parallel fan-out with a merge step (`/agent-skills:ship`).
-- On Grok, spawn personas with `spawn_subagent`. Prefer `code-reviewer`, then `agent-skills:code-reviewer`.
-
-See [docs/agents.md](docs/agents.md) and [references/orchestration-patterns.md](references/orchestration-patterns.md).
-
-## Editing this pack
-
-- Keep skill frontmatter `name` and `description` specific — Grok and Codex use them for auto-invocation.
-- Put long checklists in `references/`, not duplicated inside every skill.
-- When you add a code example, use TypeScript or Python (or both).
-- Frontend UI examples stay TypeScript/React (`tsx`).
-- After changing packaging, run `grok plugin validate .`, `grok inspect`, and validate the Codex JSON manifests.
+- Skills are the workflow unit. Keep `SKILL.md` frontmatter `name` and `description` specific and concise.
+- The five lifecycle shortcuts delegate to canonical skills; do not duplicate a canonical workflow in its shortcut.
+- `$review` coordinates applicable security, test, and performance checks. Use Codex subagents for independent read-only passes when available; otherwise do the passes in the current session.
+- Keep examples in skills and references in TypeScript or Python. Frontend examples use TypeScript/React (`tsx`).
 
 ## Intent → skill
 
-- New feature → `spec-driven-development`, then `planning-and-task-breakdown`, `incremental-implementation`, `test-driven-development`
-- Bug / failure → `debugging-and-error-recovery`
-- Review → `code-review-and-quality`
-- Refactor → `code-simplification`
-- API / module boundary → `api-and-interface-design`
-- UI → `frontend-ui-engineering`
+| Intent | Skill |
+|---|---|
+| New feature or unclear requirements | `$spec`, then `$plan`, `$build`, `$verify`, `$review` |
+| Bug or failure | `debugging-and-error-recovery` |
+| Review | `$review` / `code-review-and-quality` |
+| Refactor | `code-simplification` |
+| API or module boundary | `api-and-interface-design` |
+| UI | `frontend-ui-engineering` |
+
+## Editing this package
+
+- Keep every skill self-contained or include its supporting resources inside the skill directory when they are required at runtime.
+- Use Codex-supported plugin manifest and hook formats. Do not add another agent platform's configuration or commands.
+- Keep `plugin.json` and `.agents/plugins/marketplace.json` names and versions consistent.
+- Do not make the hook modify, mask, cache, or restore source files. Protected block checks must fail closed when a patch cannot be analyzed.
+- After changing packaging, validate JSON and run the hook unit tests:
+
+  ```bash
+  python3 -m json.tool plugin.json
+  python3 -m json.tool .agents/plugins/marketplace.json
+  python3 -m unittest discover -s hooks -p 'test_*.py'
+  ```

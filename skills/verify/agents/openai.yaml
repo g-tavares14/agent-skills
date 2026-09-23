@@ -1,0 +1,6 @@
+interface:
+  display_name: "Verify"
+  short_description: "Check changes against tests and acceptance criteria"
+  default_prompt: "Use $verify to verify the current changes and report the results."
+policy:
+  allow_implicit_invocation: false
