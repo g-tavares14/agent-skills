@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Drives development with tests using the red-green-refactor loop. Use when the user runs /agent-skills:test. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you're about to modify existing functionality.
+description: Drives behavior changes and bug fixes with the red-green-refactor loop. Use when implementing logic or when a regression test can prove a reported bug.
 ---
 
 # Test-Driven Development

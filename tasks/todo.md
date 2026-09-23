@@ -1,0 +1,34 @@
+# Tasks: migração exclusiva para Codex
+
+- [x] Task 1: Criar o manifesto portable e atualizar o catálogo local.
+  - Acceptance: O `plugin.json` raiz segue o formato portable; marketplace e manifest usam o mesmo nome/versão e apontam para o plugin.
+  - Verify: `python3 -m json.tool plugin.json` e `python3 -m json.tool .agents/plugins/marketplace.json`.
+  - Files: `plugin.json`, `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`.
+- [x] Task 2: Renomear e ajustar os aliases para spec, plan, build, verify e review.
+  - Acceptance: Existem cinco atalhos Codex com frontmatter e interface coerentes; aliases antigos de plan/test/review/ship são substituídos ou removidos.
+  - Verify: Inspecionar nomes em todos os `SKILL.md` e `agents/openai.yaml`; links de delegação apontam a workflows existentes.
+  - Files: `skills/plan/**`, `skills/verify/**`, `skills/review/**`, aliases antigos.
+- [x] Task 3: Atualizar documentação de uso e instruções do repositório para Codex.
+  - Acceptance: README descreve Codex CLI/app e cinco etapas; AGENTS e docs não instruem comandos Grok.
+  - Verify: Revisão textual com `rg -n -i 'grok|/agent-skills:' README.md AGENTS.md docs`.
+  - Files: `README.md`, `AGENTS.md`, `docs/agents.md`, `references/orchestration-patterns.md`.
+- [x] Task 4: Integrar perspectivas especializadas ao fluxo review e às docs.
+  - Acceptance: Review usa workflows/checklists disponíveis, tem fallback inline e não requer agentes customizados.
+  - Verify: Revisar referências em `skills/review`, `skills/code-review-and-quality` e `docs/agents.md`.
+  - Files: `skills/review/**`, `skills/code-review-and-quality/SKILL.md`, `docs/agents.md`, `references/orchestration-patterns.md`.
+- [x] Task 5: Remover comandos, manifests e referências exclusivas do Grok.
+  - Acceptance: Não há artefato funcional de Grok no pacote; skills de domínio permanecem disponíveis.
+  - Verify: `rg -n -i 'grok|spawn_subagent|/agent-skills:' .` só encontra histórico ou este plano se apropriado.
+  - Files: `commands/**`, `.grok-plugin/**`, `agents/**`, `plugin.json`, `.gitignore`.
+- [x] Task 6: Escrever testes do parser e do bloqueio de patches protegidos.
+  - Acceptance: Cobrem patch protegido, patch fora da região e patch malformado.
+  - Verify: teste red inicial confirmado antes da implementação; suíte passa depois da implementação.
+  - Files: `hooks/test_simplify_ignore_guard.py`.
+- [x] Task 7: Implementar hook PreToolUse fail-closed sem mutação de arquivos.
+  - Acceptance: Lê evento via stdin, bloqueia alteração protegida/ambígua e não escreve em arquivo fonte ou cache.
+  - Verify: `python3 -m unittest discover -s hooks -p 'test_*.py'` e `python3 -m py_compile hooks/simplify_ignore_guard.py`.
+  - Files: `hooks/simplify_ignore_guard.py`, `hooks/hooks.json`, `plugin.json`.
+- [x] Task 8: Atualizar documentação do hook e retirar testes/scripts legados.
+  - Acceptance: Docs explicam hook Codex, confiança e limite de cobertura; nenhum cache Grok é usado.
+  - Verify: Ler documentação e confirmar ausência de `GROK_PLUGIN_ROOT`, `.grok/` e evento Grok.
+  - Files: `hooks/SIMPLIFY-IGNORE.md`, `hooks/simplify-ignore.sh`, `hooks/simplify-ignore-test.sh`, `.gitignore`.

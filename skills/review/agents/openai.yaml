@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review"
+  short_description: "Review changes across quality and risk"
+  default_prompt: "Use $review to review the current changes."
+policy:
+  allow_implicit_invocation: false
