@@ -1,0 +1,24 @@
+{
+  "name": "agent-skills",
+  "version": "1.1.0",
+  "description": "Engineering workflows for specification, planning, building, verification, and review in Claude Code.",
+  "author": {
+    "name": "gtavares",
+    "url": "https://github.com/g-tavares14"
+  },
+  "homepage": "https://github.com/g-tavares14/agent-skills",
+  "repository": "https://github.com/g-tavares14/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "engineering",
+    "typescript",
+    "python",
+    "spec",
+    "plan",
+    "build",
+    "verify",
+    "review"
+  ]
+}

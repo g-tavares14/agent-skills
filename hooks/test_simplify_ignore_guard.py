@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from simplify_ignore_guard import check_patch, handle_event
+from simplify_ignore_guard import check_file_edit, check_patch, handle_event
 
 
 class SimplifyIgnoreGuardTests(unittest.TestCase):
@@ -173,6 +173,83 @@ class SimplifyIgnoreGuardTests(unittest.TestCase):
         )
 
         self.assertIsNone(check_patch(patch, str(self.root)))
+
+
+    def claude_event(self, tool_name, tool_input):
+        return handle_event(
+            {
+                "hook_event_name": "PreToolUse",
+                "tool_name": tool_name,
+                "tool_input": {"file_path": str(self.target), **tool_input},
+                "cwd": str(self.root),
+            }
+        )
+
+    def test_claude_edit_outside_protected_block_is_allowed(self):
+        result = self.claude_event(
+            "Edit", {"old_string": "before()", "new_string": "setup()"}
+        )
+
+        self.assertIsNone(result)
+        self.assertEqual(self.target.read_text(encoding="utf-8"), self.original)
+
+    def test_claude_edit_inside_protected_block_is_denied(self):
+        result = self.claude_event(
+            "Edit", {"old_string": "protected_call()", "new_string": "simplified()"}
+        )
+
+        self.assertEqual(result["hookSpecificOutput"]["permissionDecision"], "deny")
+        self.assertEqual(self.target.read_text(encoding="utf-8"), self.original)
+
+    def test_claude_edit_removing_marker_is_denied(self):
+        result = self.claude_event(
+            "Edit",
+            {"old_string": "# simplify-ignore-end\n", "new_string": ""},
+        )
+
+        self.assertIsNotNone(result)
+
+    def test_claude_edit_with_unmatched_text_fails_closed(self):
+        reason = check_file_edit(
+            "Edit",
+            {"file_path": str(self.target), "old_string": "missing()", "new_string": "x"},
+            str(self.root),
+        )
+
+        self.assertIn("does not match", reason)
+
+    def test_claude_multi_edit_checks_every_edit(self):
+        result = self.claude_event(
+            "MultiEdit",
+            {
+                "edits": [
+                    {"old_string": "before()", "new_string": "setup()"},
+                    {"old_string": "protected_call()", "new_string": "simplified()"},
+                ]
+            },
+        )
+
+        self.assertIsNotNone(result)
+
+    def test_claude_write_preserving_block_is_allowed(self):
+        content = self.original.replace("after()", "teardown()")
+
+        self.assertIsNone(self.claude_event("Write", {"content": content}))
+
+    def test_claude_write_dropping_block_is_denied(self):
+        self.assertIsNotNone(self.claude_event("Write", {"content": "rewritten()\n"}))
+
+    def test_claude_edit_on_unmarked_file_is_allowed(self):
+        plain = self.root / "plain.py"
+        plain.write_text("value = 1\n", encoding="utf-8")
+
+        reason = check_file_edit(
+            "Edit",
+            {"file_path": str(plain), "old_string": "absent", "new_string": "x"},
+            str(self.root),
+        )
+
+        self.assertIsNone(reason)
 
 
 if __name__ == "__main__":

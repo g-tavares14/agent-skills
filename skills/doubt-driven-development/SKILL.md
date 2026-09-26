@@ -1,13 +1,13 @@
 ---
 name: doubt-driven-development
-description: Stress-tests important decisions and claims with an adversarial, fresh-context Codex subagent. Use for uncertain architecture, high-impact behavior, unfamiliar code, or security-sensitive changes.
+description: Stress-tests important decisions and claims with an adversarial, fresh-context subagent (Codex subagent or Claude Code Agent tool). Use for uncertain architecture, high-impact behavior, unfamiliar code, or security-sensitive changes.
 ---
 
 # Doubt-Driven Development
 
 ## Purpose
 
-Use a separate Codex subagent to challenge a non-trivial decision before it becomes expensive to change. The reviewer should try to disprove the claim, not endorse it. This is an in-flight check; `$review` remains the final review of a completed diff.
+Use a separate subagent to challenge a non-trivial decision before it becomes expensive to change. The reviewer should try to disprove the claim, not endorse it. This is an in-flight check; the review shortcut (`$review` / `/agent-skills:review`) remains the final review of a completed diff.
 
 ## When to Use
 
@@ -41,9 +41,9 @@ Give the reviewer only the smallest relevant artifact and its requirements:
 
 Do not include the claim or your reasoning; they would bias the review.
 
-### 3. Ask a Codex subagent to disprove it
+### 3. Ask a subagent to disprove it
 
-Use an independent Codex subagent when available. Request a read-only investigation and a concise report with evidence and file/line references.
+Use an independent subagent when available: a Codex subagent, or the Claude Code Agent tool with a read-only agent type such as `Explore`. Request a read-only investigation and a concise report with evidence and file/line references.
 
 ```text
 Adversarial review: try to find a concrete way this artifact violates its contract.
@@ -55,7 +55,7 @@ ARTIFACT: <focused code or proposal>
 CONTRACT: <requirements and constraints>
 ```
 
-If Codex subagents are unavailable, do not describe a self-review as independent. Either continue with the limitation stated or ask for a separate review when the decision requires independent evidence.
+If subagents are unavailable, do not describe a self-review as independent. Either continue with the limitation stated or ask for a separate review when the decision requires independent evidence.
 
 ### 4. Reconcile findings
 
@@ -85,7 +85,7 @@ Stop when the latest pass finds no material new issue, after three cycles, or wh
 
 - `source-driven-development` checks framework facts against official documentation; this skill checks reasoning against the artifact's contract.
 - `test-driven-development` uses a failing test to disprove a behavioral claim.
-- `$review` checks a completed change; use this skill earlier when course correction is still cheap.
+- The review shortcut checks a completed change; use this skill earlier when course correction is still cheap.
 - `debugging-and-error-recovery` applies when a reviewer identifies a reproducible failure.
 
 ## Verification
@@ -93,5 +93,5 @@ Stop when the latest pass finds no material new issue, after three cycles, or wh
 - [ ] The claim and impact were stated before the review.
 - [ ] The reviewer received a focused artifact and contract, not the claim or prior reasoning.
 - [ ] Findings were checked against the actual artifact and classified.
-- [ ] The result states whether the pass used an independent Codex subagent.
+- [ ] The result states whether the pass used an independent subagent.
 - [ ] The review stopped at the stated limit or the user took over.

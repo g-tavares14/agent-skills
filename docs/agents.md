@@ -1,6 +1,6 @@
-# Specialist workflows in Codex
+# Specialist workflows in Codex and Claude Code
 
-The plugin distributes skills and reference material. It does not require a separate custom-agent installation. The `$review` shortcut is the review orchestrator; it uses the current Codex session and can delegate independent, read-only passes to Codex subagents when they are available.
+The plugin distributes skills and reference material. It does not require a separate custom-agent installation. The review shortcut (`$review` in Codex, `/agent-skills:review` in Claude Code) is the review orchestrator; it uses the current session and can delegate independent, read-only passes to subagents (Codex subagents or the Claude Code Agent tool) when they are available.
 
 | Perspective | Reusable workflow | Supporting reference |
 |---|---|---|
@@ -18,4 +18,4 @@ The plugin distributes skills and reference material. It does not require a sepa
 5. Use subagents only for independent read-only investigations. If subagents are unavailable or unnecessary, complete the applicable passes in the main session.
 6. Merge findings once, remove duplicates, and state residual risk.
 
-The user remains the orchestrator of the lifecycle. The main sequence is `$spec` → `$plan` → `$build` → `$verify` → `$review`; each stage retains its own decision point.
+The user remains the orchestrator of the lifecycle. The main sequence is spec → plan → build → verify → review (`$spec` … `$review` in Codex, `/agent-skills:spec` … `/agent-skills:review` in Claude Code); each stage retains its own decision point.

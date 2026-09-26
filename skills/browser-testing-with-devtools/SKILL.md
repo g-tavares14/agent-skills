@@ -33,6 +33,12 @@ command = "npx"
 args = ["-y", "chrome-devtools-mcp@latest", "--isolated"]
 ```
 
+In Claude Code, register the same server from a terminal (add `--scope project` to share it through `.mcp.json`):
+
+```bash
+claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --isolated
+```
+
 `-y` skips the npx install confirmation. By default the server launches Chrome with its own dedicated profile (under `~/.cache/chrome-devtools-mcp/`), separate from your personal browser; `--isolated` goes one step further and uses a temporary profile that is wiped when the browser closes. This is the right setup for most testing.
 
 There is also `--autoConnect` (Chrome 144+, requires enabling remote debugging via `chrome://inspect/#remote-debugging`), which attaches the agent to your **running** Chrome instead. Only use it when the test genuinely needs your logged-in state — see Profile Isolation under Security Boundaries first.

@@ -23,7 +23,7 @@ Structure context from most persistent to most transient:
 
 ```
 ┌─────────────────────────────────────┐
-│  1. Rules File (AGENTS.md)          │ ← Project-wide Codex instructions
+│  1. Rules File (AGENTS.md/CLAUDE.md)│ ← Project-wide agent instructions
 ├─────────────────────────────────────┤
 │  2. Spec / Architecture Docs        │ ← Loaded per feature/session
 ├─────────────────────────────────────┤
@@ -39,7 +39,7 @@ Structure context from most persistent to most transient:
 
 Create a rules file that persists across sessions. This is the highest-leverage context you can provide.
 
-**AGENTS.md** (Codex project instructions):
+**AGENTS.md** (Codex project instructions) or **CLAUDE.md** (Claude Code project instructions). To share one file across both, keep the content in `AGENTS.md` and make `CLAUDE.md` contain only `@AGENTS.md`:
 ```markdown
 # Project: [Name]
 

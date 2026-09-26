@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Protect simplify-ignore blocks from Codex apply_patch edits."""
+"""Protect simplify-ignore blocks from Codex apply_patch and Claude Code file edits."""
 
 from dataclasses import dataclass, field
 import json
@@ -253,18 +253,88 @@ def check_patch(command: str, cwd: str) -> Optional[str]:
     return None
 
 
+CLAUDE_EDIT_TOOLS = ("Edit", "MultiEdit", "Write")
+
+
+def _replace_text(text: str, old: Any, new: Any, replace_all: Any) -> str:
+    """Apply one Claude Code string replacement in memory."""
+    if not isinstance(old, str) or not isinstance(new, str) or not old:
+        raise GuardError("edit input is not recognized; protected files fail closed")
+    count = text.count(old)
+    if count == 0:
+        raise GuardError("edit text does not match the current file")
+    if count > 1 and replace_all is not True:
+        raise GuardError("edit text is ambiguous; cannot analyze safely")
+    return text.replace(old, new) if replace_all is True else text.replace(old, new, 1)
+
+
+def check_file_edit(tool_name: str, tool_input: Dict[str, Any], cwd: str) -> Optional[str]:
+    """Return a denial reason when a Claude Code edit threatens a protected block."""
+    try:
+        file_path = tool_input.get("file_path")
+        if not isinstance(file_path, str) or not file_path:
+            raise GuardError("edit input is missing its file_path")
+
+        target = Path(file_path)
+        if not target.is_absolute():
+            target = Path(cwd) / target
+        if not target.exists():
+            return None
+
+        protected_before = _read_marked_file(target)[1]
+        if not protected_before:
+            return None
+
+        if tool_name == "Write":
+            content = tool_input.get("content")
+            if not isinstance(content, str):
+                raise GuardError("write input is missing its content")
+        else:
+            content = target.read_bytes().decode("utf-8")
+            if tool_name == "Edit":
+                edits = [tool_input]
+            else:
+                edits = tool_input.get("edits")
+                if not isinstance(edits, list) or not edits:
+                    raise GuardError("multi-edit input is missing its edits")
+            for edit in edits:
+                if not isinstance(edit, dict):
+                    raise GuardError("edit input is not recognized; protected files fail closed")
+                content = _replace_text(
+                    content,
+                    edit.get("old_string"),
+                    edit.get("new_string"),
+                    edit.get("replace_all"),
+                )
+
+        if parse_protected_blocks(content.splitlines()) != protected_before:
+            raise GuardError("edit changes or removes a simplify-ignore protected block")
+
+    except (GuardError, OSError, UnicodeError) as error:
+        return str(error)
+
+    return None
+
+
 def handle_event(event: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """Return the Codex denial payload, or None when the call is allowed."""
+    """Return the PreToolUse denial payload, or None when the call is allowed."""
     if event.get("hook_event_name") != "PreToolUse":
         return None
-    if event.get("tool_name") != "apply_patch":
+    tool_name = event.get("tool_name")
+    if tool_name != "apply_patch" and tool_name not in CLAUDE_EDIT_TOOLS:
         return None
 
+    cwd = str(event.get("cwd") or Path.cwd())
     tool_input = event.get("tool_input")
-    if not isinstance(tool_input, dict) or not isinstance(tool_input.get("command"), str):
-        reason = "apply_patch input is missing its command; protected files fail closed"
+    if tool_name == "apply_patch":
+        if not isinstance(tool_input, dict) or not isinstance(tool_input.get("command"), str):
+            reason = "apply_patch input is missing its command; protected files fail closed"
+        else:
+            reason = check_patch(tool_input["command"], cwd)
+    elif not isinstance(tool_input, dict):
+        reason = tool_name + " input is not recognized; protected files fail closed"
     else:
-        reason = check_patch(tool_input["command"], str(event.get("cwd") or Path.cwd()))
+        reason = check_file_edit(tool_name, tool_input, cwd)
 
     if reason is None:
         return None

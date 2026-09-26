@@ -1,10 +1,11 @@
 ---
 name: plan
-description: Codex shortcut for planning work. Use only when the user explicitly invokes $plan.
+description: Lifecycle shortcut for planning work. Use only when the user explicitly invokes $plan in Codex or /agent-skills:plan in Claude Code.
+disable-model-invocation: true
 ---
 
 # Plan
 
 Read and follow `../planning-and-task-breakdown/SKILL.md` in full.
 
-Treat `$plan` as an explicit request to turn an approved specification or clear requirements into an ordered, verifiable task list. Save the implementation plan to `tasks/plan.md` and its checklist to `tasks/todo.md`, unless the project designates another task tracker.
+Treat `$plan` (Codex) or `/agent-skills:plan` (Claude Code) as an explicit request to turn an approved specification or clear requirements into an ordered, verifiable task list. Save the implementation plan to `tasks/plan.md` and its checklist to `tasks/todo.md`, unless the project designates another task tracker.

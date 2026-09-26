@@ -1,6 +1,6 @@
 # simplify-ignore protected blocks
 
-Mark code that the `code-simplification` skill must preserve. Codex sees the code normally; the hook prevents supported patch operations from changing marked blocks.
+Mark code that the `code-simplification` skill must preserve. The agent sees the code normally; the hook prevents supported edit operations from changing marked blocks in Codex and Claude Code.
 
 ```typescript
 /* simplify-ignore-start: perf-critical */
@@ -18,9 +18,13 @@ The plugin registers a `PreToolUse` hook for `apply_patch`. It reads the hook ev
 
 Review and trust the hook definition in Codex before relying on it. In Codex CLI, use `/hooks`. A changed hook definition requires a new trust review.
 
+## Claude Code hook behavior
+
+The same `hooks/hooks.json` registers a `PreToolUse` hook for `Edit`, `MultiEdit`, and `Write`. For files that contain protected blocks, it applies the requested replacements or the new content in memory and denies the call when a protected block changes, disappears, or the edit text is missing or ambiguous. Plugin hooks are active once the plugin is enabled; inspect them with `/hooks`.
+
 ## Coverage limits
 
-- The hook checks Codex `apply_patch` calls. It does not inspect shell commands, external editors, formatters, or MCP tools that write files.
+- The hook checks Codex `apply_patch` calls and Claude Code `Edit`, `MultiEdit`, and `Write` calls. It does not inspect shell commands, external editors, formatters, or MCP tools that write files.
 - The hook is a guardrail, not a complete security boundary. Keep the `code-simplification` instructions and `$review` diff check in place.
 - Ambiguous patch context fails closed for files that contain protected blocks. Rework the patch to include unique unchanged context around the intended edit.
-- If the hook is not trusted or Python 3 is unavailable, Codex skips the protection check; preserve marked code by following the skill instructions and review the diff.
+- If the hook is not trusted or Python 3 is unavailable, the protection check does not run; preserve marked code by following the skill instructions and review the diff.

@@ -9,6 +9,15 @@ description: Discovers and invokes agent skills. Use when starting a session, or
 
 Agent Skills is a collection of engineering workflow skills organized by development phase. Each skill encodes a specific process that senior engineers follow. This meta-skill helps you discover and apply the right skill for your current task.
 
+## Invoking Skills by Platform
+
+| Platform | Canonical skill | Lifecycle shortcut |
+|---|---|---|
+| Codex | `$code-review-and-quality` or implicit match | `$spec`, `$plan`, `$build`, `$verify`, `$review` |
+| Claude Code | Skill tool, or `/agent-skills:code-review-and-quality` | `/agent-skills:spec`, `/agent-skills:plan`, `/agent-skills:build`, `/agent-skills:verify`, `/agent-skills:review` |
+
+Other skills refer to shortcuts in their Codex form (`$build`); in Claude Code read that as `/agent-skills:build`.
+
 ## Skill Discovery
 
 When a task arrives, identify the development phase and apply the corresponding skill:

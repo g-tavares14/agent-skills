@@ -50,7 +50,7 @@ Never ask what you can read. Before the first question, gather:
 | Existing linters | `eslint.config.*`, `biome.json`, `.ruff.toml` |
 | Coverage today | `coverage/` output, or run the suite once |
 | CI | `.github/workflows/`, `.gitlab-ci.yml` |
-| Agent harness | `.codex/`, `AGENTS.md` |
+| Agent harness | `.codex/`, `AGENTS.md`, `.claude/`, `CLAUDE.md` |
 
 Report what you found in two lines, then ask only what's left.
 
@@ -137,7 +137,7 @@ number and no command in this column is an aspiration, not a constraint.
 | W1 | `no-explicit-any` | `src/legacy/**` | Rewrite tracked in ENG-441 | @addy | 2026-11-01 |
 ```
 
-Add this line to the project's `AGENTS.md`: `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
+Add this line to the project's `AGENTS.md` (or `CLAUDE.md`): `Read CONSTRAINTS.md before writing code. Do not weaken it to make a change pass.`
 
 ### Step 4: Install what each dimension needs
 
@@ -205,6 +205,8 @@ The single biggest mistake is running everything everywhere. A check that stalls
 | BUILD | `$build` | Fast checks for the changed slice | under 5s, changed file only |
 | VERIFY | `$verify` | Related tests and coverage | under 90s |
 | REVIEW | `$review` | Full quality and guard review | minutes |
+
+In Claude Code, the commands are `/agent-skills:spec` through `/agent-skills:review`.
 
 Two rules that keep this tolerable:
 
@@ -310,7 +312,7 @@ The skill was applied correctly when:
 - [ ] At least one constraint is external (not judged by this project's own tests)
 - [ ] Measured-only metrics record today's value and a direction
 - [ ] Exceptions have an owner and an expiry date
-- [ ] `AGENTS.md` points at the file
+- [ ] `AGENTS.md` / `CLAUDE.md` points at the file
 - [ ] A trial run on the current branch produces no failures the user disagrees with
 
 ## See Also

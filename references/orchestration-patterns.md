@@ -1,6 +1,6 @@
-# Codex orchestration patterns
+# Orchestration patterns
 
-Use skills to describe repeatable workflows and Codex subagents to isolate independent investigations. The user-facing lifecycle remains explicit: `$spec` → `$plan` → `$build` → `$verify` → `$review`.
+Use skills to describe repeatable workflows and subagents (Codex subagents or the Claude Code Agent tool) to isolate independent investigations. The user-facing lifecycle remains explicit: `$spec` → `$plan` → `$build` → `$verify` → `$review` in Codex, or `/agent-skills:spec` → `/agent-skills:plan` → `/agent-skills:build` → `/agent-skills:verify` → `/agent-skills:review` in Claude Code.
 
 ## Direct work
 
@@ -12,7 +12,7 @@ For a non-trivial review, independent read-only passes can examine code quality,
 
 Before delegating, check that each pass has a distinct question, can run without another pass's findings, and can return evidence with file and line references. Do not delegate when setup cost exceeds the value of isolated context.
 
-If Codex subagents are unavailable, perform each applicable pass sequentially in the current session. Never claim a delegated check ran if no subagent was started.
+If subagents are unavailable, perform each applicable pass sequentially in the current session. Never claim a delegated check ran if no subagent was started.
 
 ## Avoid unnecessary orchestration
 

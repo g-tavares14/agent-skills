@@ -6,8 +6,8 @@
   "plugins": [
     {
       "name": "agent-skills",
-      "version": "1.0.0",
-      "description": "Codex engineering workflows for spec, plan, build, verify, and review; examples in TypeScript and Python.",
+      "version": "1.1.0",
+      "description": "Engineering workflows for spec, plan, build, verify, and review; examples in TypeScript and Python.",
       "source": {
         "source": "local",
         "path": "./"
