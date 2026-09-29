@@ -1,19 +1,7 @@
 {
-  "description": "Protect simplify-ignore blocks from Codex apply_patch and Claude Code Edit, MultiEdit, and Write calls.",
+  "description": "Protect simplify-ignore blocks from Claude Code Edit, MultiEdit, and Write calls.",
   "hooks": {
     "PreToolUse": [
-      {
-        "matcher": "^apply_patch$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"${PLUGIN_ROOT}/hooks/simplify_ignore_guard.py\"",
-            "commandWindows": "py -3 \"%PLUGIN_ROOT%\\hooks\\simplify_ignore_guard.py\"",
-            "timeout": 10,
-            "statusMessage": "Checking protected code blocks"
-          }
-        ]
-      },
       {
         "matcher": "^(Edit|MultiEdit|Write)$",
         "hooks": [

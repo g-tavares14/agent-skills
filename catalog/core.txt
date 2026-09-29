@@ -1,0 +1,15 @@
+# Core skills installed in every project by setup-project.
+# These define how the work is done (the lifecycle and what the implementer and reviewer agents preload);
+# skills for what a project needs are added later, when a spec or plan calls for them.
+spec
+plan
+build
+verify
+review
+spec-driven-development
+planning-and-task-breakdown
+incremental-implementation
+test-driven-development
+code-review-and-quality
+code-simplification
+security-and-hardening

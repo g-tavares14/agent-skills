@@ -1,40 +1,41 @@
 # AGENTS.md
 
-Guidance for Codex and Claude Code working in this repository (`CLAUDE.md` imports this file). The package targets Codex CLI, Codex in the ChatGPT app, and Claude Code. Do not copy this file into application repositories; they need their own `AGENTS.md` / `CLAUDE.md`. The reusable assets are `skills/`, `hooks/`, `references/`, and `docs/`.
+Guidance for Claude Code working in this repository (`CLAUDE.md` imports this file). The package is a Claude Code plugin. Do not copy this file into application repositories; they need their own `AGENTS.md` / `CLAUDE.md`. The reusable assets are `catalog/`, `hooks/`, and `docs/`. Catalog skills are not loaded globally; they are copied into each application repository, which then owns and adapts its copy.
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `skills/<name>/SKILL.md` | Codex workflows and reusable engineering skills |
-| `skills/<name>/agents/openai.yaml` | Codex skill presentation and invocation policy |
-| `hooks/hooks.json` | Lifecycle hook registration shared by Codex and Claude Code |
-| `hooks/simplify_ignore_guard.py` | Protected block check for `apply_patch`, `Edit`, `MultiEdit`, and `Write` |
-| `references/` | Shared checklists cited by skills |
+| `skills/setup-project/` | The only skill loaded globally by the plugin; its script copies catalog skills into a project |
+| `catalog/<category>/<name>/SKILL.md` | Reusable engineering skills, grouped by specialty (`workflow`, `code-quality`, `backend`, `frontend`, `security`, `performance`, `devops`, `discovery`, `docs-and-context`) |
+| `catalog/core.txt` | Skills every project gets |
+| `catalog/agents/` | `implementer` and `reviewer` agent templates copied by `install` |
+| `catalog/templates/` | `AGENTS.md` and `CLAUDE.md` templates copied by `install` when a project has none |
+| `catalog/references/` | Shared checklists cited by skills (`../../references/` from a skill) |
+| `hooks/hooks.json` | `PreToolUse` hook registration |
+| `hooks/simplify_ignore_guard.py` | Protected block check for `Edit`, `MultiEdit`, and `Write` |
 | `docs/` | Package and workflow documentation |
-| `plugin.json` | Portable Agent Plugins manifest |
-| `.agents/plugins/marketplace.json` | Codex app repository marketplace |
-| `.claude-plugin/plugin.json` | Claude Code plugin manifest |
-| `.claude-plugin/marketplace.json` | Claude Code marketplace |
+| `.claude-plugin/plugin.json` | Plugin manifest |
+| `.claude-plugin/marketplace.json` | Marketplace |
 
 ## Workflow
 
-The only lifecycle shortcuts are `$spec` → `$plan` → `$build` → `$verify` → `$review` (in Claude Code: `/agent-skills:spec` … `/agent-skills:review`). Shortcut skills set `disable-model-invocation: true` for Claude Code and `allow_implicit_invocation: false` in `agents/openai.yaml` for Codex; keep both in sync. Canonical engineering skills remain available by name for specialized work.
+The only lifecycle shortcuts are `/agent-skills:spec` → `/agent-skills:plan` → `/agent-skills:build` → `/agent-skills:verify` → `/agent-skills:review`. In a project set up by `setup-project` they are `/spec` … `/review`: the catalog text keeps the `/agent-skills:` prefix, and `setup-project` removes it when copying. Shortcut skills set `disable-model-invocation: true`. Canonical engineering skills remain available by name for specialized work.
 
 ## Composition
 
 - Skills are the workflow unit. Keep `SKILL.md` frontmatter `name` and `description` specific and concise.
 - The five lifecycle shortcuts delegate to canonical skills; do not duplicate a canonical workflow in its shortcut.
-- `$review` coordinates applicable security, test, and performance checks. Use subagents (Codex subagents or the Claude Code Agent tool) for independent read-only passes when available; otherwise do the passes in the current session.
+- `/agent-skills:review` coordinates applicable security, test, and performance checks. Use subagents (the Agent tool) for independent read-only passes when available; otherwise do the passes in the current session.
 - Keep examples in skills and references in TypeScript or Python. Frontend examples use TypeScript/React (`tsx`).
 
 ## Intent → skill
 
 | Intent | Skill |
 |---|---|
-| New feature or unclear requirements | `$spec`, then `$plan`, `$build`, `$verify`, `$review` |
+| New feature or unclear requirements | `/agent-skills:spec`, then `plan`, `build`, `verify`, `review` |
 | Bug or failure | `debugging-and-error-recovery` |
-| Review | `$review` / `code-review-and-quality` |
+| Review | `/agent-skills:review` / `code-review-and-quality` |
 | Refactor | `code-simplification` |
 | API or module boundary | `api-and-interface-design` |
 | UI | `frontend-ui-engineering` |
@@ -42,17 +43,17 @@ The only lifecycle shortcuts are `$spec` → `$plan` → `$build` → `$verify` 
 ## Editing this package
 
 - Keep every skill self-contained or include its supporting resources inside the skill directory when they are required at runtime.
-- Support Codex and Claude Code only, using each platform's documented plugin manifest and hook formats. Do not add other agent platforms' configuration or commands.
-- Keep names and versions consistent across `plugin.json`, `.agents/plugins/marketplace.json`, `.claude-plugin/plugin.json`, and `.claude-plugin/marketplace.json`.
-- Keep skill text platform-neutral; when a platform detail matters, name both Codex and Claude Code.
-- Do not make the hook modify, mask, cache, or restore source files. Protected block checks must fail closed when a patch cannot be analyzed.
-- After changing packaging, validate JSON and run the hook unit tests:
+- Relative links must resolve both in the catalog (`catalog/<category>/<skill>/`) and in a project (`.claude/skills/<skill>/`, references in `.claude/references/`): cite shared checklists as `../../references/<file>.md`, and link to another skill as `../<skill>/SKILL.md` only when both skills are in the same category; otherwise cite it by name.
+- When moving or adding a skill, keep it out of `skills/` (that would load it globally) and run the setup-project tests: they check that catalog links resolve, that core skills exist, and that agents only preload core skills.
+- Target Claude Code only, using its documented plugin manifest and hook formats. Do not add other agent platforms' configuration.
+- Keep names and versions consistent across `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`.
+- Do not make the hook modify, mask, cache, or restore source files. Protected block checks must fail closed when an edit cannot be analyzed.
+- After changing packaging, validate JSON and run the tests:
 
   ```bash
-  python3 -m json.tool plugin.json
-  python3 -m json.tool .agents/plugins/marketplace.json
   python3 -m json.tool .claude-plugin/plugin.json
   python3 -m json.tool .claude-plugin/marketplace.json
   python3 -m json.tool hooks/hooks.json
   python3 -m unittest discover -s hooks -p 'test_*.py'
+  python3 -m unittest discover -s skills/setup-project/scripts -p 'test_*.py'
   ```
