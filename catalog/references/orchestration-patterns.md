@@ -1,6 +1,6 @@
 # Orchestration patterns
 
-Use skills to describe repeatable workflows and subagents (the Agent tool) to isolate independent investigations. The user-facing lifecycle remains explicit: `/agent-skills:spec` → `/agent-skills:plan` → `/agent-skills:build` → `/agent-skills:verify` → `/agent-skills:review`.
+Use skills to describe repeatable workflows and subagents (the Agent tool) to isolate independent investigations. The user-facing lifecycle remains explicit: `/spec` → `/plan` → `/build` → `/verify` → `/review`.
 
 ## Direct work
 

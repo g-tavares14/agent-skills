@@ -7,7 +7,7 @@ description: Stress-tests important decisions and claims with an adversarial, fr
 
 ## Purpose
 
-Use a separate subagent to challenge a non-trivial decision before it becomes expensive to change. The reviewer should try to disprove the claim, not endorse it. This is an in-flight check; the review shortcut (`/agent-skills:review`) remains the final review of a completed diff.
+Use a separate subagent to challenge a non-trivial decision before it becomes expensive to change. The reviewer should try to disprove the claim, not endorse it. This is an in-flight check; the review shortcut (`/review`) remains the final review of a completed diff.
 
 ## When to Use
 

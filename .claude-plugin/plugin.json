@@ -1,6 +1,6 @@
 {
   "name": "agent-skills",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Engineering workflows for specification, planning, building, verification, and review in Claude Code.",
   "author": {
     "name": "gtavares",

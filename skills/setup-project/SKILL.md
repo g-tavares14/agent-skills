@@ -15,13 +15,12 @@ the skill loads). Run it with `python3`, from the project root or with `--projec
 
 | Command | Does |
 |---|---|
-| `install` | Core skills from `catalog/core.txt`, the `implementer` and `reviewer` agents, `AGENTS.md` and `CLAUDE.md` templates, the index `.claude/catalog.md`, and the origin record `.claude/agent-skills.json` |
+| `install` | Core skills from `catalog/core.txt`, the `implementer` and `reviewer` agents, `AGENTS.md` and `CLAUDE.md` templates, and the index `.claude/catalog.md` |
 | `add <skill> ...` | One or more catalog skills, plus the sibling skills and shared references they link to |
-| `refresh` | Regenerates the index and the origin record (after removing a skill, or when the catalog changed) |
-| `list` | The catalog by category, marking installed and core skills |
 
-The script never overwrites a file that already exists in the project: it reports it as `kept`. To take a newer
-catalog version of a skill, compare it by hand with the commit in `.claude/agent-skills.json`.
+Both rewrite `.claude/catalog.md`. The script never overwrites a file that already exists in the project: it reports
+it as `kept`. To take a newer catalog version of a skill, diff the project copy against `catalog/skills/<skill>/` in
+the plugin and merge by hand, keeping the project's adaptations.
 
 ## Install
 
@@ -32,7 +31,7 @@ catalog version of a skill, compare it by hand with the commit in `.claude/agent
    The agents rely on the commands section to type-check and test.
 4. If the project already had agents with other names, point out the new `implementer.md` and `reviewer.md` and ask
    which to keep; do not delete either.
-5. Remind the user to version `.claude/` (skills, agents, references, `catalog.md`, `agent-skills.json`) and to keep
+5. Remind the user to version `.claude/` (skills, agents, references, `catalog.md`) and to keep
    `.claude/settings.local.json` out of git.
 6. Suggest writing the first spec with `/spec`: that is where the project-specific skills get chosen.
 

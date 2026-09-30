@@ -11,7 +11,7 @@ Agent Skills is a collection of engineering workflow skills organized by develop
 
 ## Invoking Skills
 
-Canonical skills are invoked with the Skill tool, or matched implicitly by their description. The lifecycle shortcuts `/agent-skills:spec`, `/agent-skills:plan`, `/agent-skills:build`, `/agent-skills:verify`, and `/agent-skills:review` run only when the user invokes them. In a project set up by `setup-project`, the skills are local and the shortcuts drop the prefix (`/spec` … `/review`).
+Canonical skills are invoked with the Skill tool, or matched implicitly by their description. The lifecycle shortcuts `/spec`, `/plan`, `/build`, `/verify`, and `/review` run only when the user invokes them.
 
 ## Skill Discovery
 

@@ -43,6 +43,9 @@ Run the type-check and test commands from AGENTS.md to confirm the state.
 
 ## Forbidden
 
+The agent-skills plugin's Bash guard enforces this list for this agent; a denied command is a step to report,
+not something to work around.
+
 - Editing files, including through Bash (`sed -i`, `>` redirection, `git checkout`, `git stash`, etc.).
 - `git commit`, `git push`, applying migrations, installing dependencies, deleting development data.
 

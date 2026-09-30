@@ -24,7 +24,7 @@ Apply this skill when:
 - An agent is producing volume nobody is reading line by line
 - CI has checks but nobody can say which ones block a merge and which ones are decoration
 - Coverage, performance, or accessibility numbers get argued about per-PR instead of decided once
-- You're about to run `/agent-skills:build auto` or any autonomous loop, and the only thing standing between it and main is a test suite the agent also wrote
+- You're about to run `/build auto` or any autonomous loop, and the only thing standing between it and main is a test suite the agent also wrote
 
 **When NOT to use:**
 
@@ -200,11 +200,11 @@ The single biggest mistake is running everything everywhere. A check that stalls
 
 | Phase | Command | What runs | Budget |
 |-------|---------|-----------|--------|
-| SPEC | `/agent-skills:spec` | Requirements and boundaries | minutes |
-| PLAN | `/agent-skills:plan` | Dependencies and verifiable tasks | minutes |
-| BUILD | `/agent-skills:build` | Fast checks for the changed slice | under 5s, changed file only |
-| VERIFY | `/agent-skills:verify` | Related tests and coverage | under 90s |
-| REVIEW | `/agent-skills:review` | Full quality and guard review | minutes |
+| SPEC | `/spec` | Requirements and boundaries | minutes |
+| PLAN | `/plan` | Dependencies and verifiable tasks | minutes |
+| BUILD | `/build` | Fast checks for the changed slice | under 5s, changed file only |
+| VERIFY | `/verify` | Related tests and coverage | under 90s |
+| REVIEW | `/review` | Full quality and guard review | minutes |
 
 
 Two rules that keep this tolerable:

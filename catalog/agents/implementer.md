@@ -29,7 +29,7 @@ Follow AGENTS.md in everything; this file only adds the implementer's workflow.
   changes outside the plan, and the type-check and test commands from AGENTS.md green **before** starting). Then run
   the remaining tasks in dependency order, verifying each. Even in this mode, **stop at every Checkpoint** in
   `tasks/todo.md` (they are owner reviews) unless the request explicitly says to go through.
-- **Stop** on ambiguity, on failed verification, or on an irreversible action without authorization (see "Forbidden").
+- **Stop** on ambiguity, on failed verification, or when the task needs a forbidden action (see "Forbidden").
 
 ## Before starting
 
@@ -72,13 +72,17 @@ finding, do not fix it: explain why in the report so the orchestrator can decide
 If something fails and you cannot find the cause in a few attempts, stop and report what you tried.
 Never delete or weaken a test to make it pass.
 
-## Forbidden without explicit authorization in the request
+## Forbidden
+
+The agent-skills plugin's Bash guard blocks the first three for this agent even when the request authorizes them,
+so do not try to work around a denial: put the step in the report. The orchestrating session or the owner runs it
+after review.
 
 - `git commit`, `git push`, or any command that rewrites history.
 - Applying database migrations. In a migration task: generate the migration, **stop**, and return it for the owner
-  to review. Apply it only if the request says it was approved.
+  to review.
+- Installing or removing dependencies. If the task needs one, stop and name the package, version, and reason.
 - Editing migrations that were already applied (create a new one).
-- Installing or removing dependencies.
 - Changing the spec or the plan. If a different decision is needed, return it as a question.
 
 ## When done
