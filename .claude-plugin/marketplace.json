@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "agent-skills",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Engineering workflows for spec, plan, build, verify, and review; examples in TypeScript and Python.",
       "source": "./",
       "category": "productivity"

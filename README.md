@@ -48,7 +48,7 @@ Someone who clones a set-up project needs nothing installed: the skills are in t
 |---|---|---|
 | Specify | `/spec` | `spec-driven-development` |
 | Plan | `/plan` | `planning-and-task-breakdown` |
-| Build | `/build` | `incremental-implementation` + `test-driven-development` |
+| Build | `/build` | `implementer` agent → `reviewer` agent, orchestrated by the session (`incremental-implementation` + `test-driven-development` without the agents) |
 | Verify | `/verify` | Acceptance criteria and repository checks |
 | Review | `/review` | `code-review-and-quality` plus applicable security, test, and performance checks |
 
